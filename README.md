@@ -1,4 +1,4 @@
-# ai_sleepapp
+# Final Year Project
 
 A new Flutter project on AI-Driven Mobile Application for Sleep Stage Classification Using Multimodal Data.
 Final Year Project at AUT.
