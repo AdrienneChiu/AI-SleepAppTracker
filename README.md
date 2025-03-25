@@ -1,6 +1,7 @@
 # ai_sleepapp
 
-A new Flutter project.
+A new Flutter project on AI-Driven Mobile Application for Sleep Stage Classification Using Multimodal Data.
+Final Year Project at AUT.
 
 ## Getting Started
 
