@@ -4,6 +4,7 @@ void main() {
   runApp(const MyApp());
 }
 
+//App settings
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -13,10 +14,10 @@ class MyApp extends StatelessWidget {
       title: 'Flutter App for AI Sleep',
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue), // Dark Blue theme
-        scaffoldBackgroundColor: Colors.blue[800], // Set background to dark blue
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue), 
+        scaffoldBackgroundColor: Colors.blue[800],
         appBarTheme: AppBarTheme(
-          backgroundColor: Colors.blue[800], // Set AppBar color to match scaffold background
+          backgroundColor: Colors.blue[800], 
         ),
       ),
       home: const NavigationExample(),
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
+// Navigation bar
 class NavigationExample extends StatefulWidget {
   const NavigationExample({super.key});
 
@@ -31,13 +33,14 @@ class NavigationExample extends StatefulWidget {
   State<NavigationExample> createState() => _NavigationExampleState();
 }
 
+// Navigation bar state
 class _NavigationExampleState extends State<NavigationExample> {
   int currentPageIndex = 0; // Tracks the current page index for the nav bar
 
   // Pages for navigation
   final List<Widget> pages = [
-    const HomePage(),  
-    const InsightsPage(),
+    const InsightsPage(),  
+    const HomePage(),
     const InfoPage(),    
   ];
 
@@ -86,14 +89,15 @@ class _NavigationExampleState extends State<NavigationExample> {
   }
 }
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+
+class InsightsPage extends StatelessWidget {
+  const InsightsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Text(
-        'Home Page Content',
+        'Insights Page Content',
         style: TextStyle(
           fontSize: 24,
           color: Colors.white,
@@ -103,8 +107,9 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class InsightsPage extends StatelessWidget {
-  const InsightsPage({super.key});
+//Home Page
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -171,6 +176,7 @@ class InsightsPage extends StatelessWidget {
   }
 }
 
+//Insights Page
 class InfoPage extends StatelessWidget {
   const InfoPage({super.key});
 
