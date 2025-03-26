@@ -13,10 +13,10 @@ class MyApp extends StatelessWidget {
       title: 'Flutter App for AI Sleep',
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue), 
-        scaffoldBackgroundColor: Colors.blue[800], 
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue), // Dark Blue theme
+        scaffoldBackgroundColor: Colors.blue[800], // Set background to dark blue
         appBarTheme: AppBarTheme(
-          backgroundColor: Colors.blue[800], 
+          backgroundColor: Colors.blue[800], // Set AppBar color to match scaffold background
         ),
       ),
       home: const NavigationExample(),
@@ -36,9 +36,9 @@ class _NavigationExampleState extends State<NavigationExample> {
 
   // Pages for navigation
   final List<Widget> pages = [
-    const HomePage(),      
+    const HomePage(),  
     const InsightsPage(),
-    const InfoPage(),
+    const InfoPage(),    
   ];
 
   @override
@@ -47,14 +47,14 @@ class _NavigationExampleState extends State<NavigationExample> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'PSG',
+          '', //If i ever need a title for app
           style: TextStyle(
-            color: Colors.white, 
-            fontSize: 32, 
-            fontWeight: FontWeight.bold, 
+            color: Colors.white, // Title text color
+            fontSize: 32, // Bigger font size
+            fontWeight: FontWeight.bold, // Bold text
           ),
         ),
-        backgroundColor: theme.scaffoldBackgroundColor,
+        backgroundColor: theme.scaffoldBackgroundColor, // Match app bar color to background
       ),
       body: pages[currentPageIndex], // Display the page based on the current index
       bottomNavigationBar: NavigationBar(
@@ -66,19 +66,19 @@ class _NavigationExampleState extends State<NavigationExample> {
         selectedIndex: currentPageIndex,
         destinations: <Widget>[
           NavigationDestination(
-            selectedIcon: const Icon(Icons.insights, size: 40),
-            icon: const Icon(Icons.insights_outlined, size: 40),
-            label: '', 
+            selectedIcon: const Icon(Icons.insights, size: 50),
+            icon: const Icon(Icons.insights_outlined, size: 50),
+            label: '',  // Home now points to the InsightsPage
           ),
           NavigationDestination(
-            selectedIcon: const Icon(Icons.home, size: 40),
-            icon: const Icon(Icons.home_outlined, size: 40),
-            label: '', 
+            selectedIcon: const Icon(Icons.home, size: 50),
+            icon: const Icon(Icons.home_outlined, size: 50),
+            label: '',  // Insights now points to the HomePage
           ),
           NavigationDestination(
-            selectedIcon: const Icon(Icons.info, size: 40),
-            icon: const Icon(Icons.info_outline, size: 40),
-            label: '',
+            selectedIcon: const Icon(Icons.info, size: 50),
+            icon: const Icon(Icons.info_outline, size: 50),
+            label: '', // Info page will show "PSG" title
           ),
         ],
       ),
@@ -116,7 +116,7 @@ class InsightsPage extends StatelessWidget {
           margin: const EdgeInsets.only(bottom: 20.0),
           padding: const EdgeInsets.all(20.0),
           decoration: BoxDecoration(
-            color: Colors.blue[100], 
+            color: Colors.blue[100], // Light Blue Background for the summary
             borderRadius: BorderRadius.circular(15.0),
           ),
           child: Column(
@@ -131,7 +131,7 @@ class InsightsPage extends StatelessWidget {
                 ),
               const SizedBox(height: 8.0),
               // const Text(
-              //   'Text in summary, will add pie chart and sleep quality',
+              //   'This section provides a summary of your sleep analysis, highlighting key metrics such as sleep stages, duration, and quality.',
               //   style: TextStyle(fontSize: 16),
               // ),
             ],
@@ -143,7 +143,7 @@ class InsightsPage extends StatelessWidget {
           margin: const EdgeInsets.only(bottom: 20.0),
           padding: const EdgeInsets.all(20.0),
           decoration: BoxDecoration(
-            color: Colors.blue[100], 
+            color: Colors.blue[100], // Light Blue Background for the sleep tracker
             borderRadius: BorderRadius.circular(15.0),
           ),
           child: Column(
@@ -158,7 +158,7 @@ class InsightsPage extends StatelessWidget {
                 ),
               const SizedBox(height: 8.0),
               // const Text(
-              //   'Will place start and pause here',
+              //   'Track your sleep cycles, including deep sleep, light sleep, and REM sleep, and monitor any potential sleep disturbances.',
               //   style: TextStyle(fontSize: 16),
               // ),
             ],
@@ -178,70 +178,85 @@ class InfoPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     
-    // Titles for the information boxes on info page
+    // Define the titles for the information boxes
     final List<String> infoTitles = [
-      'EEG', 
+      'EGG', 
       'EOG', 
       'EMG'
     ];
 
-    return ListView.builder(
-      itemCount: infoTitles.length, // Number of information boxes
-      itemBuilder: (BuildContext context, int index) {
-        // Different content for each box
-        String bodyText = '';
-        switch (index) {
-          case 0:
-            bodyText = 'Lorem Ipsum is simply dummy text.';
-            break;
-          case 1:
-            bodyText = 'Lorem Ipsum is simply dummy text.';
-            break;
-          case 2:
-            bodyText = 'Lorem Ipsum is simply dummy text.';
-            break;
-        }
-
-        return Align(
-          alignment: Alignment.center,
-          child: Container(
-            margin: const EdgeInsets.all(20.0),
-            padding: const EdgeInsets.all(40.0),
-            height: 150.0,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: index == 0
-                  ? const Color.fromARGB(255, 241, 165, 190)
-                  : index == 1
-                      ? const Color.fromARGB(255, 167, 142, 235)
-                      : Colors.green,
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Use the infoTitles list to get the title for each information box
-                Text(
-                  infoTitles[index], // Dynamically set the title from the list
-                  style: theme.textTheme.bodyLarge!.copyWith(
-                    color: theme.colorScheme.onPrimary,
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 10), // Space between title and body, adjust
-                Text(
-                  bodyText,
-                  style: theme.textTheme.bodyMedium!.copyWith(
-                    color: theme.colorScheme.onPrimary,
-                    fontSize: 16,
-                  ),
-                ),
-              ],
-            ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'PSG',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 60,
+            fontWeight: FontWeight.bold,
           ),
-        );
-      },
+        ),
+        backgroundColor: theme.scaffoldBackgroundColor, // Match the background color
+      ),
+      body: ListView.builder(
+        itemCount: infoTitles.length, // Number of information boxes
+        itemBuilder: (BuildContext context, int index) {
+          // Different content for each box
+          String bodyText = '';
+          switch (index) {
+            case 0:
+              bodyText = 'Lorem Ipsum is simply dummy text';
+              break;
+            case 1:
+              bodyText = 'Lorem Ipsum is simply dummy text';
+              break;
+            case 2:
+              bodyText = 'Lorem Ipsum is simply dummy text';
+              break;
+          }
+
+          return Align(
+            alignment: Alignment.center,
+            child: Container(
+              margin: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(40.0),
+              height: 150.0,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: index == 0
+                    ? const Color.fromARGB(255, 241, 165, 190)
+                    : index == 1
+                        ? const Color.fromARGB(255, 167, 142, 235)
+                        : Colors.green,
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center, // Center the content horizontally
+                children: [
+                  // Center the title using the Center widget
+                  Center(
+                    child: Text(
+                      infoTitles[index], // Dynamically set the title from the list
+                      style: theme.textTheme.bodyLarge!.copyWith(
+                        color: theme.colorScheme.onPrimary,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10), // Space between title and body
+                  Text(
+                    bodyText,
+                    style: theme.textTheme.bodyMedium!.copyWith(
+                      color: theme.colorScheme.onPrimary,
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }
