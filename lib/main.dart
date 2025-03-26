@@ -13,10 +13,10 @@ class MyApp extends StatelessWidget {
       title: 'Flutter App for AI Sleep',
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue), // Dark Blue theme
-        scaffoldBackgroundColor: Colors.blue[800], // Set background to dark blue
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue), 
+        scaffoldBackgroundColor: Colors.blue[800], 
         appBarTheme: AppBarTheme(
-          backgroundColor: Colors.blue[800], // Set AppBar color to match scaffold background
+          backgroundColor: Colors.blue[800], 
         ),
       ),
       home: const NavigationExample(),
@@ -36,8 +36,8 @@ class _NavigationExampleState extends State<NavigationExample> {
 
   // Pages for navigation
   final List<Widget> pages = [
-    const HomePage(),      // Home page now has the Insights content
-    const InsightsPage(),  // Insights page now has the Home content
+    const HomePage(),      
+    const InsightsPage(),
     const InfoPage(),
   ];
 
@@ -49,12 +49,12 @@ class _NavigationExampleState extends State<NavigationExample> {
         title: const Text(
           'PSG',
           style: TextStyle(
-            color: Colors.white, // Title text color
-            fontSize: 32, // Bigger font size
-            fontWeight: FontWeight.bold, // Bold text
+            color: Colors.white, 
+            fontSize: 32, 
+            fontWeight: FontWeight.bold, 
           ),
         ),
-        backgroundColor: theme.scaffoldBackgroundColor, // Match app bar color to background
+        backgroundColor: theme.scaffoldBackgroundColor,
       ),
       body: pages[currentPageIndex], // Display the page based on the current index
       bottomNavigationBar: NavigationBar(
@@ -68,17 +68,17 @@ class _NavigationExampleState extends State<NavigationExample> {
           NavigationDestination(
             selectedIcon: const Icon(Icons.insights, size: 40),
             icon: const Icon(Icons.insights_outlined, size: 40),
-            label: 'Insights',  // Insights now appears as first tab
+            label: '', 
           ),
           NavigationDestination(
             selectedIcon: const Icon(Icons.home, size: 40),
             icon: const Icon(Icons.home_outlined, size: 40),
-            label: 'Home',  // Home appears as second tab
+            label: '', 
           ),
           NavigationDestination(
             selectedIcon: const Icon(Icons.info, size: 40),
             icon: const Icon(Icons.info_outline, size: 40),
-            label: 'Info',
+            label: '',
           ),
         ],
       ),
@@ -116,7 +116,7 @@ class InsightsPage extends StatelessWidget {
           margin: const EdgeInsets.only(bottom: 20.0),
           padding: const EdgeInsets.all(20.0),
           decoration: BoxDecoration(
-            color: Colors.blue[100], // Light Blue Background for the summary
+            color: Colors.blue[100], 
             borderRadius: BorderRadius.circular(15.0),
           ),
           child: Column(
@@ -131,7 +131,7 @@ class InsightsPage extends StatelessWidget {
                 ),
               const SizedBox(height: 8.0),
               // const Text(
-              //   'This section provides a summary of your sleep analysis, highlighting key metrics such as sleep stages, duration, and quality.',
+              //   'Text in summary, will add pie chart and sleep quality',
               //   style: TextStyle(fontSize: 16),
               // ),
             ],
@@ -143,7 +143,7 @@ class InsightsPage extends StatelessWidget {
           margin: const EdgeInsets.only(bottom: 20.0),
           padding: const EdgeInsets.all(20.0),
           decoration: BoxDecoration(
-            color: Colors.blue[100], // Light Blue Background for the sleep tracker
+            color: Colors.blue[100], 
             borderRadius: BorderRadius.circular(15.0),
           ),
           child: Column(
@@ -158,7 +158,7 @@ class InsightsPage extends StatelessWidget {
                 ),
               const SizedBox(height: 8.0),
               // const Text(
-              //   'Track your sleep cycles, including deep sleep, light sleep, and REM sleep, and monitor any potential sleep disturbances.',
+              //   'Will place start and pause here',
               //   style: TextStyle(fontSize: 16),
               // ),
             ],
@@ -177,8 +177,16 @@ class InfoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
+    
+    // Titles for the information boxes on info page
+    final List<String> infoTitles = [
+      'EEG', 
+      'EOG', 
+      'EMG'
+    ];
+
     return ListView.builder(
-      itemCount: 3, // Number of information boxes
+      itemCount: infoTitles.length, // Number of information boxes
       itemBuilder: (BuildContext context, int index) {
         // Different content for each box
         String bodyText = '';
@@ -197,35 +205,36 @@ class InfoPage extends StatelessWidget {
         return Align(
           alignment: Alignment.center,
           child: Container(
-            margin: const EdgeInsets.all(20.0), // Reduced margin
-            padding: const EdgeInsets.all(40.0), // Increased padding to make boxes bigger
-            height: 150.0, // Increased height to fit more content
-            width: double.infinity, // Makes the boxes take full width of the screen
+            margin: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(40.0),
+            height: 150.0,
+            width: double.infinity,
             decoration: BoxDecoration(
               color: index == 0
-                  ? const Color.fromARGB(255, 241, 165, 190) // Swapped: Information 1 (pink)
+                  ? const Color.fromARGB(255, 241, 165, 190)
                   : index == 1
-                      ? const Color.fromARGB(255, 167, 142, 235) // Information 2 (purple)
-                      : Colors.green, // Swapped: Information 3 (green)
+                      ? const Color.fromARGB(255, 167, 142, 235)
+                      : Colors.green,
               borderRadius: BorderRadius.circular(20.0),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Use the infoTitles list to get the title for each information box
                 Text(
-                  'Information ${index + 1}',
+                  infoTitles[index], // Dynamically set the title from the list
                   style: theme.textTheme.bodyLarge!.copyWith(
                     color: theme.colorScheme.onPrimary,
-                    fontSize: 22, // Adjust font size for the title
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 10), // Space between title and body
+                const SizedBox(height: 10), // Space between title and body, adjust
                 Text(
                   bodyText,
                   style: theme.textTheme.bodyMedium!.copyWith(
                     color: theme.colorScheme.onPrimary,
-                    fontSize: 16, // Adjust font size for content
+                    fontSize: 16,
                   ),
                 ),
               ],
