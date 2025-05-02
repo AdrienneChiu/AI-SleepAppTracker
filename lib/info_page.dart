@@ -10,7 +10,7 @@ class InfoPage extends StatelessWidget {
     
     // Define the titles for the information boxes
     final List<String> infoTitles = [
-      'EGG', 
+      'EEG', 
       'EOG', 
       'EMG'
     ];
@@ -34,13 +34,13 @@ class InfoPage extends StatelessWidget {
           String bodyText = '';
           switch (index) {
             case 0:
-              bodyText = 'Lorem Ipsum is simply dummy text';
+              bodyText = 'Monitors electrical brain activity during sleep.';
               break;
             case 1:
-              bodyText = 'Lorem Ipsum is simply dummy text';
+              bodyText = 'Tracks eye movements to detect REM sleep.';
               break;
             case 2:
-              bodyText = 'Lorem Ipsum is simply dummy text';
+              bodyText = 'Measures muscle activity to detect body movements.';
               break;
           }
 
@@ -48,8 +48,8 @@ class InfoPage extends StatelessWidget {
             alignment: Alignment.center,
             child: Container(
               margin: const EdgeInsets.all(20.0),
-              padding: const EdgeInsets.all(40.0),
-              height: 150.0,
+              padding: const EdgeInsets.all(20.0),
+              constraints: const BoxConstraints(minHeight: 150.0),
               width: double.infinity,
               decoration: BoxDecoration(
                 color: index == 0
