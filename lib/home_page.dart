@@ -78,7 +78,7 @@ class _HomePageState extends State<HomePage> {
               const Text(
                 'Summary',
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: 36,
                   fontWeight: FontWeight.bold,
                   color: Color.fromARGB(255, 34, 90, 188),
                 ),
@@ -94,16 +94,18 @@ class _HomePageState extends State<HomePage> {
               const Text(
                 'Hours of Sleep: #.#',
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 20,
                   color: Color.fromARGB(255, 34, 90, 188),
+                  fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 4.0),
               const Text(
                 'Sleep Quality: Good',
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 20,
                   color: Color.fromARGB(255, 34, 90, 188),
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ],
