@@ -138,144 +138,146 @@ class _InsightsPageState extends State<InsightsPage> {
     return SafeArea(
       child: Container(
         color: Colors.blue[800],
-        child: Column(
-          children: [
-            const SizedBox(height: 40),
-            const Text(
-              "Sleep Insights",
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            children: [
+              const SizedBox(height: 40),
+              const Text(
+                "Sleep Insights",
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 10),
-            GestureDetector(
-              onTap: _pickDate,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Text(
-                  "Sleep Data for ${DateFormat('d MMMM yyyy').format(selectedDate)}",
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    decoration: TextDecoration.underline,
-                    decorationColor: Colors.white,
+              const SizedBox(height: 10),
+              GestureDetector(
+                onTap: _pickDate,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Text(
+                    "Sleep Data for ${DateFormat('d MMMM yyyy').format(selectedDate)}",
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      decoration: TextDecoration.underline,
+                      decorationColor: Colors.white,
+                    ),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(7, (index) {
-                final date = weekDates[index];
-                final isSelected = date.day == selectedDate.day &&
-                    date.month == selectedDate.month &&
-                    date.year == selectedDate.year;
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(7, (index) {
+                  final date = weekDates[index];
+                  final isSelected = date.day == selectedDate.day &&
+                      date.month == selectedDate.month &&
+                      date.year == selectedDate.year;
 
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selectedDate = date;
-                    });
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: isSelected ? Colors.blue[600] : Colors.blue[300],
-                      shape: BoxShape.circle,
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      DateFormat.E().format(date)[0],
-                      style: TextStyle(
-                        color: isSelected ? Colors.white : Colors.black,
-                        fontWeight: FontWeight.bold,
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedDate = date;
+                      });
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: isSelected ? Colors.blue[600] : Colors.blue[300],
+                        shape: BoxShape.circle,
                       ),
-                    ),
-                  ),
-                );
-              }),
-            ),
-            const SizedBox(height: 20),
-
-            // Chart
-            SizedBox(
-              height: 200,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: LineChart(
-                  LineChartData(
-                    gridData: FlGridData(show: true, drawVerticalLine: true),
-                    titlesData: FlTitlesData(
-                      leftTitles: AxisTitles(
-                        sideTitles: SideTitles(
-                          showTitles: true,
-                          reservedSize: 50,
-                          interval: 1,
-                          getTitlesWidget: (value, meta) {
-                            const stages = ['W', 'N1', 'N2', 'N3', 'R'];
-                            int index = value.toInt();
-                            if (index < 0 || index >= stages.length) return Container();
-                            return Text(
-                              stages[index],
-                              style: const TextStyle(color: Colors.white70, fontSize: 14),
-                            );
-                          },
+                      alignment: Alignment.center,
+                      child: Text(
+                        DateFormat.E().format(date)[0],
+                        style: TextStyle(
+                          color: isSelected ? Colors.white : Colors.black,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      bottomTitles: AxisTitles(
-                        sideTitles: SideTitles(
-                          showTitles: true,
-                          reservedSize: 40,
-                          interval: 60,
-                          getTitlesWidget: (value, meta) {
-                            int hours = value ~/ 60;
-                            return Text(
-                              '${hours}h',
-                              style: const TextStyle(color: Colors.white70, fontSize: 12),
-                            );
-                          },
-                        ),
-                      ),
-                      rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                      topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
                     ),
-                    borderData: FlBorderData(show: false),
-                    minX: 0,
-                    maxX: durationsInMinutes.reduce((a, b) => a > b ? a : b).toDouble() + 20,
-                    minY: 0,
-                    maxY: (durationsInMinutes.length - 1).toDouble(),
-                    lineBarsData: [
-                      LineChartBarData(
-                        spots: List.generate(
-                          durationsInMinutes.length,
-                          (index) => FlSpot(
-                            durationsInMinutes[index].toDouble(),
-                            index.toDouble(),
+                  );
+                }),
+              ),
+              const SizedBox(height: 20),
+
+              // Chart
+              SizedBox(
+                height: 200,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: LineChart(
+                    LineChartData(
+                      gridData: FlGridData(show: true, drawVerticalLine: true),
+                      titlesData: FlTitlesData(
+                        leftTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: true,
+                            reservedSize: 50,
+                            interval: 1,
+                            getTitlesWidget: (value, meta) {
+                              const stages = ['W', 'N1', 'N2', 'N3', 'R'];
+                              int index = value.toInt();
+                              if (index < 0 || index >= stages.length) return Container();
+                              return Text(
+                                stages[index],
+                                style: const TextStyle(color: Colors.white70, fontSize: 14),
+                              );
+                            },
                           ),
                         ),
-                        isCurved: true,
-                        barWidth: 3,
-                        color: Colors.white,
-                        dotData: FlDotData(show: true),
-                        belowBarData: BarAreaData(show: false),
+                        bottomTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: true,
+                            reservedSize: 40,
+                            interval: 60,
+                            getTitlesWidget: (value, meta) {
+                              int hours = value ~/ 60;
+                              return Text(
+                                '${hours}h',
+                                style: const TextStyle(color: Colors.white70, fontSize: 12),
+                              );
+                            },
+                          ),
+                        ),
+                        rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                        topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
                       ),
-                    ],
+                      borderData: FlBorderData(show: false),
+                      minX: 0,
+                      maxX: durationsInMinutes.reduce((a, b) => a > b ? a : b).toDouble() + 20,
+                      minY: 0,
+                      maxY: (durationsInMinutes.length - 1).toDouble(),
+                      lineBarsData: [
+                        LineChartBarData(
+                          spots: List.generate(
+                            durationsInMinutes.length,
+                            (index) => FlSpot(
+                              durationsInMinutes[index].toDouble(),
+                              index.toDouble(),
+                            ),
+                          ),
+                          isCurved: true,
+                          barWidth: 3,
+                          color: Colors.white,
+                          dotData: FlDotData(show: true),
+                          belowBarData: BarAreaData(show: false),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
 
-            // Insight boxes
-            Expanded(
-              child: ListView.builder(
-                physics: const BouncingScrollPhysics(),
+              // Insight boxes
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: stageNames.length,
                 itemBuilder: (context, index) {
                   return GestureDetector(
@@ -299,8 +301,10 @@ class _InsightsPageState extends State<InsightsPage> {
                   );
                 },
               ),
-            ),
-          ],
+
+              const SizedBox(height: 20), // extra bottom padding
+            ],
+          ),
         ),
       ),
     );
