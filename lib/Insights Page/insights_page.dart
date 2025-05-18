@@ -1,4 +1,4 @@
-// lib/insights/insights_page.dart
+// Main Insights Page
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -35,11 +35,11 @@ class _InsightsPageState extends State<InsightsPage> {
   ];
 
   final List<Color> boxColors = [
-    const Color.fromARGB(255, 241, 165, 190), //Pink
-    const Color.fromARGB(255, 167, 142, 235), //Purple
-    const Color.fromRGBO(76, 175, 80, 1),     //Green
-    const Color.fromARGB(255, 95, 159, 231),  //Blue
-    const Color.fromARGB(255, 209, 176, 67),  //Yellow
+    const Color.fromARGB(255, 241, 165, 190), // Pink
+    const Color.fromARGB(255, 167, 142, 235), // Purple
+    const Color.fromRGBO(76, 175, 80, 1),     // Green
+    const Color.fromARGB(255, 95, 159, 231),  // Blue
+    const Color.fromARGB(255, 209, 176, 67),  // Yellow
   ];
 
   String formatDuration(int totalMinutes) {
@@ -209,10 +209,63 @@ class _InsightsPageState extends State<InsightsPage> {
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                 child: Divider(
-                color: Colors.white,
-                thickness: 1.5,
+                  color: Colors.white,
+                  thickness: 1.5,
                 ),
+              ),
+
+              // Analysis section
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: const [
+                    Text(
+                      "Analysis",
+                      style: TextStyle(
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      "Interpretation",
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 40),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Good Sleep: ",
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Average Sleep: ",
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Bad Sleep: ",
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                    ),
+                  ],
                 ),
+              ),
             ],
           ),
         ),

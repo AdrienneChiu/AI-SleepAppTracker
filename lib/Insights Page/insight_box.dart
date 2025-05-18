@@ -1,4 +1,3 @@
-// lib/insights/insight_box.dart
 import 'package:flutter/material.dart';
 
 class InsightBox extends StatelessWidget {
