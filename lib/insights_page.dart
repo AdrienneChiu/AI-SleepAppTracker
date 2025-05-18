@@ -12,16 +12,8 @@ class InsightsPage extends StatefulWidget {
 class _InsightsPageState extends State<InsightsPage> {
   DateTime selectedDate = DateTime.now();
 
-  // Example durations in minutes for each sleep stage (replace with real data)
-  final List<int> durationsInMinutes = [
-    45,  // Stage W
-    50,  // Stage N1
-    65, // Stage N2
-    170,  // Stage N3
-    200,  // Stage R
-  ];
+  final List<int> durationsInMinutes = [50, 60, 75, 170, 200];
 
-  // Sleep Stage names
   final List<String> stageNames = [
     "W (Awake)",
     "N1 (Light Sleep)",
@@ -30,7 +22,6 @@ class _InsightsPageState extends State<InsightsPage> {
     "R (REM)",
   ];
 
-  // Updated descriptions as provided
   final List<String> descriptions = [
     "Stage W is wakefulness. This stage indicates the amount of time you were awake during the night.",
     "Stage N1 is the lightest stage of sleep where you start to fall asleep.",
@@ -39,16 +30,14 @@ class _InsightsPageState extends State<InsightsPage> {
     "Stage R is REM sleep, associated with dreaming and brain activity.",
   ];
 
-  // Background colors for each box
   final List<Color> boxColors = [
-    Color.fromARGB(255, 241, 165, 190), // Awake - Pink
-    Color.fromARGB(255, 167, 142, 235), // Light - Purple
-    Color.fromRGBO(76, 175, 80, 1),     // Moderate - Green
-    Color.fromARGB(255, 95, 159, 231),  // Deep - Blue
-    Color.fromARGB(255, 209, 176, 67),  // REM - Yellow
+    Color.fromARGB(255, 241, 165, 190),
+    Color.fromARGB(255, 167, 142, 235),
+    Color.fromRGBO(76, 175, 80, 1),
+    Color.fromARGB(255, 95, 159, 231),
+    Color.fromARGB(255, 209, 176, 67),
   ];
 
-  // Function to format the duration in hours and minutes
   String formatDuration(int totalMinutes) {
     final hours = totalMinutes ~/ 60;
     final minutes = totalMinutes % 60;
@@ -62,18 +51,15 @@ class _InsightsPageState extends State<InsightsPage> {
     }
   }
 
-  // Function to build the insight text for each stage
   String buildInsightText(int index) {
     return "${stageNames[index]}: ${formatDuration(durationsInMinutes[index])}";
   }
 
-  // Function to get the dates of the week for the selected date
   List<DateTime> getWeekDates(DateTime date) {
     DateTime startOfWeek = date.subtract(Duration(days: date.weekday - 1));
     return List.generate(7, (i) => startOfWeek.add(Duration(days: i)));
   }
 
-  // Function to show the date picker
   Future<void> _pickDate() async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -82,14 +68,13 @@ class _InsightsPageState extends State<InsightsPage> {
       lastDate: DateTime(2100),
     );
 
-      if (picked != null && picked != selectedDate) {
+    if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
       });
     }
   }
 
- // Function to show the pop-up insight details
   void showInsightDetails(int index) {
     showDialog(
       context: context,
@@ -150,7 +135,6 @@ class _InsightsPageState extends State<InsightsPage> {
   Widget build(BuildContext context) {
     final weekDates = getWeekDates(selectedDate);
 
-    // Layout for the insights page (including title, date picker, chart)
     return SafeArea(
       child: Container(
         color: Colors.blue[800],
@@ -208,7 +192,7 @@ class _InsightsPageState extends State<InsightsPage> {
                     ),
                     alignment: Alignment.center,
                     child: Text(
-                      DateFormat.E().format(date).substring(0, 1),
+                      DateFormat.E().format(date)[0],
                       style: TextStyle(
                         color: isSelected ? Colors.white : Colors.black,
                         fontWeight: FontWeight.bold,
@@ -220,16 +204,32 @@ class _InsightsPageState extends State<InsightsPage> {
             ),
             const SizedBox(height: 20),
 
-          //Line Chart
-           SizedBox(
+            // Chart
+            SizedBox(
               height: 200,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: LineChart(
                   LineChartData(
-                    gridData: FlGridData(show: true, drawVerticalLine: false),
+                    gridData: FlGridData(show: true, drawVerticalLine: true),
                     titlesData: FlTitlesData(
                       leftTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: true,
+                          reservedSize: 50,
+                          interval: 1,
+                          getTitlesWidget: (value, meta) {
+                            const stages = ['W', 'N1', 'N2', 'N3', 'R'];
+                            int index = value.toInt();
+                            if (index < 0 || index >= stages.length) return Container();
+                            return Text(
+                              stages[index],
+                              style: const TextStyle(color: Colors.white70, fontSize: 14),
+                            );
+                          },
+                        ),
+                      ),
+                      bottomTitles: AxisTitles(
                         sideTitles: SideTitles(
                           showTitles: true,
                           reservedSize: 40,
@@ -243,35 +243,22 @@ class _InsightsPageState extends State<InsightsPage> {
                           },
                         ),
                       ),
-                      bottomTitles: AxisTitles(
-                        sideTitles: SideTitles(
-                          showTitles: true,
-                          interval: 1,
-                          reservedSize: 30,
-                          getTitlesWidget: (value, meta) {
-                            const stages = ['W', 'N1', 'N2', 'N3', 'R'];
-                            int index = value.toInt();
-                            if (index < 0 || index >= stages.length) return Container();
-                            return Text(
-                              stages[index],
-                              style: const TextStyle(color: Colors.white70, fontSize: 14),
-                            );
-                          },
-                        ),
-                      ),
                       rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
                       topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
                     ),
                     borderData: FlBorderData(show: false),
                     minX: 0,
-                    maxX: (durationsInMinutes.length - 1).toDouble(),
+                    maxX: durationsInMinutes.reduce((a, b) => a > b ? a : b).toDouble() + 20,
                     minY: 0,
-                    maxY: durationsInMinutes.reduce((a, b) => a > b ? a : b).toDouble() + 20,
+                    maxY: (durationsInMinutes.length - 1).toDouble(),
                     lineBarsData: [
                       LineChartBarData(
                         spots: List.generate(
                           durationsInMinutes.length,
-                          (index) => FlSpot(index.toDouble(), durationsInMinutes[index].toDouble()),
+                          (index) => FlSpot(
+                            durationsInMinutes[index].toDouble(),
+                            index.toDouble(),
+                          ),
                         ),
                         isCurved: true,
                         barWidth: 3,
@@ -285,7 +272,7 @@ class _InsightsPageState extends State<InsightsPage> {
               ),
             ),
 
-            // List of insights and layout
+            // Insight boxes
             Expanded(
               child: ListView.builder(
                 physics: const BouncingScrollPhysics(),
@@ -294,8 +281,7 @@ class _InsightsPageState extends State<InsightsPage> {
                   return GestureDetector(
                     onTap: () => showInsightDetails(index),
                     child: Container(
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 8.0, horizontal: 20.0),
+                      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
                       padding: const EdgeInsets.all(20.0),
                       decoration: BoxDecoration(
                         color: boxColors[index],
