@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 class InsightsPage extends StatefulWidget {
   const InsightsPage({super.key});
@@ -14,13 +15,13 @@ class _InsightsPageState extends State<InsightsPage> {
   // Example durations in minutes for each sleep stage (replace with real data)
   final List<int> durationsInMinutes = [
     45,  // Stage W
-    90,  // Stage N1
-    120, // Stage N2
-    60,  // Stage N3
-    50,  // Stage R
+    50,  // Stage N1
+    65, // Stage N2
+    170,  // Stage N3
+    200,  // Stage R
   ];
 
-  // Friendly stage names
+  // Sleep Stage names
   final List<String> stageNames = [
     "W (Awake)",
     "N1 (Light Sleep)",
@@ -47,6 +48,7 @@ class _InsightsPageState extends State<InsightsPage> {
     Color.fromARGB(255, 209, 176, 67),  // REM - Yellow
   ];
 
+  // Function to format the duration in hours and minutes
   String formatDuration(int totalMinutes) {
     final hours = totalMinutes ~/ 60;
     final minutes = totalMinutes % 60;
@@ -60,15 +62,18 @@ class _InsightsPageState extends State<InsightsPage> {
     }
   }
 
+  // Function to build the insight text for each stage
   String buildInsightText(int index) {
     return "${stageNames[index]}: ${formatDuration(durationsInMinutes[index])}";
   }
 
+  // Function to get the dates of the week for the selected date
   List<DateTime> getWeekDates(DateTime date) {
     DateTime startOfWeek = date.subtract(Duration(days: date.weekday - 1));
     return List.generate(7, (i) => startOfWeek.add(Duration(days: i)));
   }
 
+  // Function to show the date picker
   Future<void> _pickDate() async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -77,13 +82,14 @@ class _InsightsPageState extends State<InsightsPage> {
       lastDate: DateTime(2100),
     );
 
-    if (picked != null && picked != selectedDate) {
+      if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
       });
     }
   }
 
+ // Function to show the pop-up insight details
   void showInsightDetails(int index) {
     showDialog(
       context: context,
@@ -144,6 +150,7 @@ class _InsightsPageState extends State<InsightsPage> {
   Widget build(BuildContext context) {
     final weekDates = getWeekDates(selectedDate);
 
+    // Layout for the insights page (including title, date picker, chart)
     return SafeArea(
       child: Container(
         color: Colors.blue[800],
@@ -212,6 +219,73 @@ class _InsightsPageState extends State<InsightsPage> {
               }),
             ),
             const SizedBox(height: 20),
+
+          //Line Chart
+           SizedBox(
+              height: 200,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: LineChart(
+                  LineChartData(
+                    gridData: FlGridData(show: true, drawVerticalLine: false),
+                    titlesData: FlTitlesData(
+                      leftTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: true,
+                          reservedSize: 40,
+                          interval: 60,
+                          getTitlesWidget: (value, meta) {
+                            int hours = value ~/ 60;
+                            return Text(
+                              '${hours}h',
+                              style: const TextStyle(color: Colors.white70, fontSize: 12),
+                            );
+                          },
+                        ),
+                      ),
+                      bottomTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: true,
+                          interval: 1,
+                          reservedSize: 30,
+                          getTitlesWidget: (value, meta) {
+                            const stages = ['W', 'N1', 'N2', 'N3', 'R'];
+                            int index = value.toInt();
+                            if (index < 0 || index >= stages.length) return Container();
+                            return Text(
+                              stages[index],
+                              style: const TextStyle(color: Colors.white70, fontSize: 14),
+                            );
+                          },
+                        ),
+                      ),
+                      rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                      topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    ),
+                    borderData: FlBorderData(show: false),
+                    minX: 0,
+                    maxX: (durationsInMinutes.length - 1).toDouble(),
+                    minY: 0,
+                    maxY: durationsInMinutes.reduce((a, b) => a > b ? a : b).toDouble() + 20,
+                    lineBarsData: [
+                      LineChartBarData(
+                        spots: List.generate(
+                          durationsInMinutes.length,
+                          (index) => FlSpot(index.toDouble(), durationsInMinutes[index].toDouble()),
+                        ),
+                        isCurved: true,
+                        barWidth: 3,
+                        color: Colors.white,
+                        dotData: FlDotData(show: true),
+                        belowBarData: BarAreaData(show: false),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
+            // List of insights and layout
             Expanded(
               child: ListView.builder(
                 physics: const BouncingScrollPhysics(),

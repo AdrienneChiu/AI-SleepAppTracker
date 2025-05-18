@@ -17,7 +17,7 @@ class _NavigationExampleState extends State<NavigationExample> {
 
   // Pages for navigation
   final List<Widget> pages = [
-    const InsightsPage(),  
+    InsightsPage(),  
     const HomePage(),
     const InfoPage(),    
   ];
