@@ -204,6 +204,15 @@ class _InsightsPageState extends State<InsightsPage> {
               ),
 
               const SizedBox(height: 20),
+
+              // White divider
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                child: Divider(
+                color: Colors.white,
+                thickness: 1.5,
+                ),
+                ),
             ],
           ),
         ),
