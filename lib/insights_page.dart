@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class InsightsPage extends StatefulWidget {
   const InsightsPage({super.key});
@@ -8,13 +9,7 @@ class InsightsPage extends StatefulWidget {
 }
 
 class _InsightsPageState extends State<InsightsPage> {
-  int selectedDayIndex = 0;
-
-  final List<String> shortDays = ["M", "T", "W", "T", "F", "S", "S"];
-  final List<String> fullDays = [
-    "Monday", "Tuesday", "Wednesday", "Thursday",
-    "Friday", "Saturday", "Sunday"
-  ];
+  DateTime selectedDate = DateTime.now();
 
   final List<String> insights = [
     "Stage W: #h #m",
@@ -32,16 +27,36 @@ class _InsightsPageState extends State<InsightsPage> {
     Color.fromARGB(255, 209, 176, 67),
   ];
 
+  /// Returns the list of weekdays for the week of a given date (Mon - Sun)
+  List<DateTime> getWeekDates(DateTime date) {
+    DateTime startOfWeek = date.subtract(Duration(days: date.weekday - 1));
+    return List.generate(7, (i) => startOfWeek.add(Duration(days: i)));
+  }
+
+  /// Handles date picking via calendar
+  Future<void> _pickDate() async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2100),
+    );
+
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
+    }
+  }
+
+  /// Show popup insight card
   void showInsightDetails(int index) {
     showDialog(
       context: context,
-      barrierDismissible: true,
       builder: (context) {
         return Dialog(
           backgroundColor: boxColors[index],
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           child: Container(
             padding: const EdgeInsets.all(20),
             height: MediaQuery.of(context).size.height * 0.5,
@@ -83,7 +98,8 @@ class _InsightsPageState extends State<InsightsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final weekDates = getWeekDates(selectedDate);
+    //final selectedDayIndex = selectedDate.weekday - 1;
 
     return SafeArea(
       child: Container(
@@ -100,94 +116,99 @@ class _InsightsPageState extends State<InsightsPage> {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
+            GestureDetector(
+              onTap: _pickDate,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Text(
+                  "Sleep Data for ${DateFormat('d MMMM yyyy').format(selectedDate)}",
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    decoration: TextDecoration.underline,
+                    decorationColor: Colors.white
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
 
-            // Days of the week selector
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(shortDays.length, (index) {
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selectedDayIndex = index;
-                      });
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: selectedDayIndex == index
-                            ? Colors.blue[600]
-                            : Colors.blue[300],
-                        shape: BoxShape.circle,
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        shortDays[index],
-                        style: TextStyle(
-                          color: selectedDayIndex == index
-                              ? Colors.white
-                              : Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
+            // Weekday bubbles
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(7, (index) {
+                final date = weekDates[index];
+                final isSelected = date.day == selectedDate.day &&
+                    date.month == selectedDate.month &&
+                    date.year == selectedDate.year;
+
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      selectedDate = date;
+                    });
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: isSelected ? Colors.blue[600] : Colors.blue[300],
+                      shape: BoxShape.circle,
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      DateFormat.E().format(date).substring(0, 1),
+                      style: TextStyle(
+                        color: isSelected ? Colors.white : Colors.black,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  );
-                }),
-              ),
+                  ),
+                );
+              }),
             ),
 
-            // Selected day label
-            Text(
-              "Sleep Data for ${fullDays[selectedDayIndex]}",
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
+            // const SizedBox(height: 10),
+            // Text(
+            //   "Sleep Data for ${DateFormat.EEEE().format(selectedDate)}",
+            //   style: const TextStyle(
+            //     fontSize: 20,
+            //     fontWeight: FontWeight.bold,
+            //     color: Colors.white,
+            //   ),
+            // ),
 
             const SizedBox(height: 20),
 
-            // Insights list + divider
+            // Insight list
             Expanded(
               child: ListView.builder(
                 physics: const BouncingScrollPhysics(),
-                itemCount: insights.length + 1,
+                itemCount: insights.length,
                 itemBuilder: (context, index) {
-                  if (index < insights.length) {
-                    return GestureDetector(
-                      onTap: () => showInsightDetails(index),
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 20.0),
-                        padding: const EdgeInsets.all(20.0),
-                        decoration: BoxDecoration(
-                          color: boxColors[index],
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        child: Text(
-                          insights[index],
-                          style: theme.textTheme.bodyLarge!.copyWith(
-                            color: Colors.white,
-                            fontSize: 18,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
+                  return GestureDetector(
+                    onTap: () => showInsightDetails(index),
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 8.0, horizontal: 20.0),
+                      padding: const EdgeInsets.all(20.0),
+                      decoration: BoxDecoration(
+                        color: boxColors[index],
+                        borderRadius: BorderRadius.circular(15.0),
                       ),
-                    );
-                  } else {
-                    return const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 60.0),
-                      child: Divider(
-                        thickness: 1,
-                        color: Colors.white70,
+                      child: Text(
+                        insights[index],
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                    );
-                  }
+                    ),
+                  );
                 },
               ),
             ),
