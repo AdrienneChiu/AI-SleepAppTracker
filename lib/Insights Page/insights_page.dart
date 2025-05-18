@@ -1,6 +1,10 @@
+// lib/insights/insights_page.dart
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:fl_chart/fl_chart.dart';
+
+import 'date_selector.dart';
+import 'line_chart.dart';
+import 'insight_box.dart';
 
 class InsightsPage extends StatefulWidget {
   const InsightsPage({super.key});
@@ -12,7 +16,7 @@ class InsightsPage extends StatefulWidget {
 class _InsightsPageState extends State<InsightsPage> {
   DateTime selectedDate = DateTime.now();
 
-  final List<int> durationsInMinutes = [50, 60, 75, 170, 200];
+  final List<int> durationsInMinutes = [10, 60, 75, 170, 200];
 
   final List<String> stageNames = [
     "W (Awake)",
@@ -31,11 +35,11 @@ class _InsightsPageState extends State<InsightsPage> {
   ];
 
   final List<Color> boxColors = [
-    Color.fromARGB(255, 241, 165, 190),
-    Color.fromARGB(255, 167, 142, 235),
-    Color.fromRGBO(76, 175, 80, 1),
-    Color.fromARGB(255, 95, 159, 231),
-    Color.fromARGB(255, 209, 176, 67),
+    const Color.fromARGB(255, 241, 165, 190), //Pink
+    const Color.fromARGB(255, 167, 142, 235), //Purple
+    const Color.fromRGBO(76, 175, 80, 1),     //Green
+    const Color.fromARGB(255, 95, 159, 231),  //Blue
+    const Color.fromARGB(255, 209, 176, 67),  //Yellow
   ];
 
   String formatDuration(int totalMinutes) {
@@ -170,139 +174,36 @@ class _InsightsPageState extends State<InsightsPage> {
                 ),
               ),
               const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(7, (index) {
-                  final date = weekDates[index];
-                  final isSelected = date.day == selectedDate.day &&
-                      date.month == selectedDate.month &&
-                      date.year == selectedDate.year;
 
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selectedDate = date;
-                      });
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: isSelected ? Colors.blue[600] : Colors.blue[300],
-                        shape: BoxShape.circle,
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        DateFormat.E().format(date)[0],
-                        style: TextStyle(
-                          color: isSelected ? Colors.white : Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  );
-                }),
+              DateSelector(
+                weekDates: weekDates,
+                selectedDate: selectedDate,
+                onDateSelected: (date) {
+                  setState(() {
+                    selectedDate = date;
+                  });
+                },
               ),
+
               const SizedBox(height: 20),
 
-              // Chart
-              SizedBox(
-                height: 200,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: LineChart(
-                    LineChartData(
-                      gridData: FlGridData(show: true, drawVerticalLine: true),
-                      titlesData: FlTitlesData(
-                        leftTitles: AxisTitles(
-                          sideTitles: SideTitles(
-                            showTitles: true,
-                            reservedSize: 50,
-                            interval: 1,
-                            getTitlesWidget: (value, meta) {
-                              const stages = ['W', 'N1', 'N2', 'N3', 'R'];
-                              int index = value.toInt();
-                              if (index < 0 || index >= stages.length) return Container();
-                              return Text(
-                                stages[index],
-                                style: const TextStyle(color: Colors.white70, fontSize: 14),
-                              );
-                            },
-                          ),
-                        ),
-                        bottomTitles: AxisTitles(
-                          sideTitles: SideTitles(
-                            showTitles: true,
-                            reservedSize: 40,
-                            interval: 60,
-                            getTitlesWidget: (value, meta) {
-                              int hours = value ~/ 60;
-                              return Text(
-                                '${hours}h',
-                                style: const TextStyle(color: Colors.white70, fontSize: 12),
-                              );
-                            },
-                          ),
-                        ),
-                        rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                        topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                      ),
-                      borderData: FlBorderData(show: false),
-                      minX: 0,
-                      maxX: durationsInMinutes.reduce((a, b) => a > b ? a : b).toDouble() + 20,
-                      minY: 0,
-                      maxY: (durationsInMinutes.length - 1).toDouble(),
-                      lineBarsData: [
-                        LineChartBarData(
-                          spots: List.generate(
-                            durationsInMinutes.length,
-                            (index) => FlSpot(
-                              durationsInMinutes[index].toDouble(),
-                              index.toDouble(),
-                            ),
-                          ),
-                          isCurved: true,
-                          barWidth: 3,
-                          color: Colors.white,
-                          dotData: FlDotData(show: true),
-                          belowBarData: BarAreaData(show: false),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+              LineChartWidget(durationsInMinutes: durationsInMinutes),
 
-              // Insight boxes
+              // Insight boxes list
               ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: stageNames.length,
                 itemBuilder: (context, index) {
-                  return GestureDetector(
+                  return InsightBox(
+                    color: boxColors[index],
+                    text: buildInsightText(index),
                     onTap: () => showInsightDetails(index),
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
-                      padding: const EdgeInsets.all(20.0),
-                      decoration: BoxDecoration(
-                        color: boxColors[index],
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      child: Text(
-                        buildInsightText(index),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
                   );
                 },
               ),
 
-              const SizedBox(height: 20), // extra bottom padding
+              const SizedBox(height: 20),
             ],
           ),
         ),

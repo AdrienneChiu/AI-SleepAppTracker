@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'home_page.dart';
-import 'insights_page.dart';
+import 'Insights Page/insights_page.dart';
 import 'info_page.dart';
 
 // Navigation bar
