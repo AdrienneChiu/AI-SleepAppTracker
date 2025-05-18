@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
@@ -6,7 +7,6 @@ class SleepPieChart extends StatelessWidget {
 
   const SleepPieChart({super.key, required this.values});
 
-  // Colors for the pie chart slices
   final List<Color> sliceColors = const [
     Color.fromARGB(255, 241, 165, 190), // pink
     Color.fromARGB(255, 167, 142, 235), // purple
@@ -15,7 +15,6 @@ class SleepPieChart extends StatelessWidget {
     Color.fromARGB(255, 95, 159, 231),  // blue
   ];
 
-  // Creates the pie chart
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -39,7 +38,6 @@ class SleepPieChart extends StatelessWidget {
   }
 }
 
-// This is the main page of the app
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -47,24 +45,57 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-// Placeholder data for the pie chart
 class _HomePageState extends State<HomePage> {
-  List<double> sleepStageValues = [30, 20, 25, 15, 10]; // Initial pie values
+  List<double> sleepStageValues = [30, 20, 25, 15, 10];
 
-  // This is where I'll update pie chart values dynamically when AI model is implemented
-  void updatePieChart(List<double> newValues) {
+  bool isRunning = false;
+  Stopwatch stopwatch = Stopwatch();
+  late Timer timer;
+  Duration recordedSleepDuration = Duration.zero;
+
+  void toggleStopwatch() {
+    if (isRunning) {
+      stopwatch.stop();
+      timer.cancel();
+      recordedSleepDuration = stopwatch.elapsed;
+    } else {
+      stopwatch.start();
+      timer = Timer.periodic(const Duration(seconds: 1), (_) {
+        setState(() {});
+      });
+    }
     setState(() {
-      sleepStageValues = newValues;
+      isRunning = !isRunning;
     });
   }
 
-  // Bubbles containing the pie chart and manual sleep tracker
+  void resetStopwatch() {
+    stopwatch.reset();
+    if (isRunning) timer.cancel();
+    setState(() {
+      isRunning = false;
+      recordedSleepDuration = Duration.zero;
+    });
+  }
+
+  // Update this function to return formatted time (hh:mm:ss)
+  String formatDuration(Duration d) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    return "${twoDigits(d.inHours)}:${twoDigits(d.inMinutes % 60)}:${twoDigits(d.inSeconds % 60)}";
+  }
+
+  @override
+  void dispose() {
+    if (isRunning) timer.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView(
       padding: const EdgeInsets.all(16.0),
       children: [
-        // Summary Bubble Section
+        // Summary Section
         Container(
           margin: const EdgeInsets.only(bottom: 20.0),
           padding: const EdgeInsets.all(20.0),
@@ -84,16 +115,12 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               const SizedBox(height: 12.0),
-
-              // Dynamic Pie Chart
               SleepPieChart(values: sleepStageValues),
-
               const SizedBox(height: 16.0),
-
-              // Text Info
-              const Text(
-                'Hours of Sleep: #.#',
-                style: TextStyle(
+              // Display formatted time in the same stopwatch format (hh:mm:ss)
+              Text(
+                'Hours of Sleep: ${formatDuration(recordedSleepDuration)}',
+                style: const TextStyle(
                   fontSize: 20,
                   color: Color.fromARGB(255, 34, 90, 188),
                   fontWeight: FontWeight.bold,
@@ -112,7 +139,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
 
-        // Sleep Tracker Bubble Section
+        // Sleep Tracker Section
         Container(
           margin: const EdgeInsets.only(bottom: 20.0),
           padding: const EdgeInsets.all(20.0),
@@ -120,16 +147,58 @@ class _HomePageState extends State<HomePage> {
             color: Colors.blue[100],
             borderRadius: BorderRadius.circular(15.0),
           ),
-          child: const Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Stack(
             children: [
-              Text(
-                ' Sleep \nTracker',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 34, 90, 188),
+              // Reset Button Top-Right
+              Positioned(
+                top: 10,
+                right: 10,
+                child: ElevatedButton(
+                  onPressed: resetStopwatch,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text('Reset Timer'),
                 ),
+              ),
+              // Column for title + stopwatch
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Sleep\nTracker',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 34, 90, 188),
+                      height: 1.2,
+                    ),
+                  ),
+                  const SizedBox(height: 10), // Reduced space between reset button and stopwatch
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: Icon(isRunning ? Icons.stop : Icons.play_arrow),
+                          color: Colors.deepPurple,
+                          iconSize: 32,
+                          onPressed: toggleStopwatch,
+                        ),
+                        Text(
+                          formatDuration(stopwatch.elapsed),
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w600,
+                            color: Color.fromARGB(255, 34, 90, 188),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
