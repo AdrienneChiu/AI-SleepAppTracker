@@ -1,36 +1,93 @@
 import 'package:flutter/material.dart';
 
-//Information Page
 class InfoPage extends StatelessWidget {
   const InfoPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    
-    // Define the titles for the information boxes
-    final List<String> infoTitles = [
-      'EEG', 
-      'EOG', 
-      'EMG'
+    final theme = Theme.of(context);
+
+    final List<Map<String, dynamic>> pages = [
+      {
+        'title': 'PSG',
+        'page': const PsgInfoPage(),
+        'color': const Color.fromARGB(255, 241, 165, 190),
+      },
+      {
+        'title': 'Sleep Stage Descriptions',
+        'page': const SleepStageDescriptionsPage(),
+        'color': const Color.fromARGB(255, 167, 142, 235),
+      },
+      {
+        'title': 'Sleep Analysis Interpretation',
+        'page': const SleepAnalysisInterpretationPage(),
+        'color': const Color.fromRGBO(76, 175, 80, 1),
+      },
     ];
 
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'PSG',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 60,
-            fontWeight: FontWeight.bold,
-          ),
+          'Information Page',
+          style: TextStyle(color: Colors.white, fontSize: 40,fontWeight: FontWeight.bold,),
         ),
-        backgroundColor: theme.scaffoldBackgroundColor, // Match the background color
+        backgroundColor: theme.scaffoldBackgroundColor,
+        elevation: 0,
+        iconTheme: IconThemeData(color: theme.colorScheme.onBackground),
+        foregroundColor: theme.colorScheme.onBackground,
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: pages.map((entry) {
+            return Container(
+              margin: const EdgeInsets.symmetric(horizontal: 24),
+              width: MediaQuery.of(context).size.width * 0.8, 
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: entry['color'],
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 40),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => entry['page']),
+                  );
+                },
+                child: Text(
+                  entry['title'],
+                  style: const TextStyle(fontSize: 20),
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+}
+
+// PSG Info Page with your colored boxes
+class PsgInfoPage extends StatelessWidget {
+  const PsgInfoPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final List<String> infoTitles = ['EEG', 'EOG', 'EMG'];
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('PSG'),
       ),
       body: ListView.builder(
-        itemCount: infoTitles.length, // Number of information boxes
-        itemBuilder: (BuildContext context, int index) {
-          // Different content for each box
+        padding: const EdgeInsets.all(20),
+        itemCount: infoTitles.length,
+        itemBuilder: (context, index) {
           String bodyText = '';
           switch (index) {
             case 0:
@@ -44,48 +101,81 @@ class InfoPage extends StatelessWidget {
               break;
           }
 
-          return Align(
-            alignment: Alignment.center,
-            child: Container(
-              margin: const EdgeInsets.all(20.0),
-              padding: const EdgeInsets.all(20.0),
-              constraints: const BoxConstraints(minHeight: 150.0),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: index == 0
-                    ? const Color.fromARGB(255, 241, 165, 190)
-                    : index == 1
-                        ? const Color.fromARGB(255, 167, 142, 235)
-                        : const Color.fromRGBO(76, 175, 80, 1),
-                borderRadius: BorderRadius.circular(20.0),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center, // Center the content horizontally
-                children: [
-                  // Center the title using the Center widget
-                  Center(
-                    child: Text(
-                      infoTitles[index], // Dynamically set the title from the list
-                      style: theme.textTheme.bodyLarge!.copyWith(
-                        color: theme.colorScheme.onPrimary,
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+          return Container(
+            margin: const EdgeInsets.symmetric(vertical: 12),
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: index == 0
+                  ? const Color.fromARGB(255, 241, 165, 190)
+                  : index == 1
+                      ? const Color.fromARGB(255, 167, 142, 235)
+                      : const Color.fromRGBO(76, 175, 80, 1),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  infoTitles[index],
+                  style: theme.textTheme.titleLarge!.copyWith(
+                    color: theme.colorScheme.onPrimary,
+                    fontWeight: FontWeight.bold,
                   ),
-                  const SizedBox(height: 10), // Space between title and body
-                  Text(
-                    bodyText,
-                    style: theme.textTheme.bodyMedium!.copyWith(
-                      color: theme.colorScheme.onPrimary,
-                      fontSize: 16,
-                    ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  bodyText,
+                  style: theme.textTheme.bodyLarge!.copyWith(
+                    color: theme.colorScheme.onPrimary,
                   ),
-                ],
-              ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+// Sleep Stage Descriptions Page
+class SleepStageDescriptionsPage extends StatelessWidget {
+  const SleepStageDescriptionsPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Sleep Stage Descriptions'),
+      ),
+      body: const Padding(
+        padding: EdgeInsets.all(20),
+        child: Text(
+          'Here you can add detailed descriptions for sleep stages like N1, N2, N3, REM, and Wake.',
+          style: TextStyle(fontSize: 16),
+        ),
+      ),
+    );
+  }
+}
+
+// Sleep Analysis Interpretation Page
+class SleepAnalysisInterpretationPage extends StatelessWidget {
+  const SleepAnalysisInterpretationPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Sleep Analysis Interpretation'),
+      ),
+      body: const Padding(
+        padding: EdgeInsets.all(20),
+        child: Text(
+          'This section will provide interpretations of the sleep analysis results.',
+          style: TextStyle(fontSize: 16),
+        ),
       ),
     );
   }
