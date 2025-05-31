@@ -149,55 +149,20 @@ class _HomePageState extends State<HomePage> {
           ),
           child: Stack(
             children: [
-              // Reset Button Top-Right
-              Positioned(
-                top: 10,
-                right: 10,
-                child: ElevatedButton(
-                  onPressed: resetStopwatch,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: const Text('Reset Timer'),
-                ),
-              ),
               // Column for title + stopwatch
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Sleep\nTracker',
+                    'Your Sleep Score',
                     style: TextStyle(
-                      fontSize: 28,
+                      fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: Color.fromARGB(255, 34, 90, 188),
                       height: 1.2,
                     ),
                   ),
-                  const SizedBox(height: 10), // Reduced space between reset button and stopwatch
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: Icon(isRunning ? Icons.stop : Icons.play_arrow),
-                          color: Colors.deepPurple,
-                          iconSize: 32,
-                          onPressed: toggleStopwatch,
-                        ),
-                        Text(
-                          formatDuration(stopwatch.elapsed),
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w600,
-                            color: Color.fromARGB(255, 34, 90, 188),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  const SizedBox(height: 10), 
                 ],
               ),
             ],
