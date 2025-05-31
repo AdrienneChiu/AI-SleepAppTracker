@@ -7,7 +7,7 @@ class SleepAnalysisInterpretationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sleep Analysis Interpretation'),
+        // title: const Text('Sleep Analysis Interpretation'),
       ),
       body: SingleChildScrollView(  // Add scroll so content doesn’t overflow
         padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12),
@@ -17,7 +17,7 @@ class SleepAnalysisInterpretationPage extends StatelessWidget {
             // Section Header: Analysis
             const Center(
               child: Text(
-                "Analysis",
+                " Sleep Analysis",
                 style: TextStyle(
                   fontSize: 40,
                   fontWeight: FontWeight.bold,

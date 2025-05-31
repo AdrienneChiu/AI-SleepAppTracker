@@ -13,13 +13,13 @@ class InfoPage extends StatelessWidget {
 
     final List<Map<String, dynamic>> pages = [
       {
-        'title': 'PSG',
+        'title': 'PSG Interpretation',
         'page': const PsgInfoPage(),
         'color': const Color.fromARGB(255, 241, 165, 190),
       },
       {
         'title': 'Sleep Stage Descriptions',
-        'page': const SleepStageDescriptionsPage(),
+        'page': const SleepStageDescriptionPage(),
         'color': const Color.fromARGB(255, 167, 142, 235),
       },
       {
@@ -68,7 +68,11 @@ class InfoPage extends StatelessWidget {
                 },
                 child: Text(
                   entry['title'],
-                  style: const TextStyle(fontSize: 20),
+                  style: const TextStyle(
+                  fontSize: 26, // Increased size here
+                  fontWeight: FontWeight.bold,
+                  ),
+                    textAlign: TextAlign.center,
                 ),
               ),
             );
