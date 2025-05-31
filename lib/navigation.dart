@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'home_page.dart';
 import 'Insights Page/insights_page.dart';
-import 'info_page.dart';
+import 'Info Page/info_page.dart';
 
 // Navigation bar
 class NavigationExample extends StatefulWidget {
