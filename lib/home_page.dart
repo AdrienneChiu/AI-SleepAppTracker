@@ -114,19 +114,19 @@ class _HomePageState extends State<HomePage> {
                   color: Color.fromARGB(255, 34, 90, 188),
                 ),
               ),
-              const SizedBox(height: 12.0),
+              const SizedBox(height: 10.0),
               SleepPieChart(values: sleepStageValues),
               const SizedBox(height: 16.0),
               // Display formatted time in the same stopwatch format (hh:mm:ss)
-              Text(
-                'Hours of Sleep: ${formatDuration(recordedSleepDuration)}',
-                style: const TextStyle(
-                  fontSize: 20,
-                  color: Color.fromARGB(255, 34, 90, 188),
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 4.0),
+              // Text(
+              //   'Hours of Sleep: ${formatDuration(recordedSleepDuration)}',
+              //   style: const TextStyle(
+              //     fontSize: 20,
+              //     color: Color.fromARGB(255, 34, 90, 188),
+              //     fontWeight: FontWeight.bold,
+              //   ),
+              // ),
+              const SizedBox(height: 10.0),
               const Text(
                 'Sleep Quality: Good',
                 style: TextStyle(
@@ -138,8 +138,9 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
+        
 
-        // Sleep Tracker Section
+        // Sleep Score Section
         Container(
           margin: const EdgeInsets.only(bottom: 20.0),
           padding: const EdgeInsets.all(20.0),
