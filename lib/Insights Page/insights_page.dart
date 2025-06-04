@@ -1,6 +1,10 @@
-// Main Insights Page
+// Main Insights UI Page
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:fl_chart/fl_chart.dart';
+import 'heart_rate_chart.dart';
+
+
 
 import 'date_selector.dart';
 import 'line_chart.dart';
@@ -17,6 +21,17 @@ class _InsightsPageState extends State<InsightsPage> {
   DateTime selectedDate = DateTime.now();
 
   final List<int> durationsInMinutes = [10, 60, 75, 170, 200];
+
+  final List<FlSpot> heartRateData = [
+  FlSpot(0, 65),
+  FlSpot(1, 68),
+  FlSpot(2, 72),
+  FlSpot(3, 70),
+  FlSpot(4, 75),
+  FlSpot(5, 73),
+  FlSpot(6, 71),
+];
+
 
   final List<String> stageNames = [
     "W (Awake)",
@@ -146,6 +161,24 @@ class _InsightsPageState extends State<InsightsPage> {
                   thickness: 1.5,
                 ),
               ),
+
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24.0),
+                child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Heart Rate (BPM)",
+                  style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          HeartRateChart(data: heartRateData),
+          const SizedBox(height: 32),
             ],
           ),
         ),

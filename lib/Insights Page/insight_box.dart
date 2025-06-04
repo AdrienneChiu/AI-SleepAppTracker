@@ -1,3 +1,5 @@
+// Colourful box widget used for the sleep stage insights display
+
 import 'package:flutter/material.dart';
 
 class InsightBox extends StatelessWidget {
