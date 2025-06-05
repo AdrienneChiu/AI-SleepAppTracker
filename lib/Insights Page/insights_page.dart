@@ -23,14 +23,18 @@ class _InsightsPageState extends State<InsightsPage> {
   final List<int> durationsInMinutes = [10, 60, 75, 170, 200];
 
   final List<FlSpot> heartRateData = [
-  FlSpot(0, 65),
-  FlSpot(1, 68),
-  FlSpot(2, 72),
-  FlSpot(3, 70),
-  FlSpot(4, 75),
-  FlSpot(5, 73),
-  FlSpot(6, 71),
-];
+    FlSpot(0, 70),
+    FlSpot(1, 74),
+    FlSpot(2, 78),
+    FlSpot(3, 72),
+    FlSpot(4, 88),
+    FlSpot(5, 84),
+    FlSpot(6, 76),
+    FlSpot(7, 70),
+    FlSpot(8, 92),
+    FlSpot(9, 85),
+  ];
+
 
 
   final List<String> stageNames = [
@@ -177,7 +181,7 @@ class _InsightsPageState extends State<InsightsPage> {
             ),
           ),
           const SizedBox(height: 12),
-          HeartRateChart(data: heartRateData),
+          HeartRateChart(heartRateData: heartRateData),
           const SizedBox(height: 32),
             ],
           ),
