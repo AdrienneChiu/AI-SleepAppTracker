@@ -73,35 +73,6 @@ class _InsightsPageState extends State<InsightsPage> {
   ];
 
 
-
-  // Sample EEG data - not using anymore
-  // final List<FlSpot> eegData = [
-  // FlSpot(0, 10),
-  // FlSpot(1, -20),
-  // FlSpot(2, 50),
-  // FlSpot(3, -60),
-  // FlSpot(4, 80),
-  // FlSpot(5, -40),
-  // FlSpot(6, 30),
-  // FlSpot(7, -10),
-  // FlSpot(8, 20),
-  // FlSpot(9, 0),
-  // ];
-
-  // Sample heart rate data - not using anymore
-  // final List<FlSpot> heartRateData = [
-  // FlSpot(0, 70),
-  // FlSpot(1, 74),
-  // FlSpot(2, 78),
-  // FlSpot(3, 72),
-  // FlSpot(4, 88),
-  // FlSpot(5, 84),
-  // FlSpot(6, 76),
-  // FlSpot(7, 70),
-  // FlSpot(8, 92),
-  // FlSpot(9, 85),
-  // ];
-
   final List<FlSpot> sleepStageData = [
   FlSpot(0, 10), // Awake
   FlSpot(1, 60), // N1
