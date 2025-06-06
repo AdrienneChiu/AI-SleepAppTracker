@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'heart_rate_chart.dart';
-import 'EEG_chart.dart';
+
+import 'sleep_stage_comparison_chart.dart';
 import 'date_selector.dart';
 import 'line_chart.dart';
 import 'insight_box.dart';
@@ -20,34 +20,95 @@ class _InsightsPageState extends State<InsightsPage> {
 
   final List<int> durationsInMinutes = [10, 60, 75, 170, 200];
 
-    // Sample EEG data
-    final List<FlSpot> eegData = [
-    FlSpot(0, 10),
-    FlSpot(1, -20),
-    FlSpot(2, 50),
-    FlSpot(3, -60),
-    FlSpot(4, 80),
-    FlSpot(5, -40),
-    FlSpot(6, 30),
-    FlSpot(7, -10),
-    FlSpot(8, 20),
-    FlSpot(9, 0),
+    final List<Map<String, double>> sleepStageData = [
+    {
+      "Awake": 20,
+      "N1": 30,
+      "N2": 100,
+      "N3": 150,
+      "REM": 80,
+    },
+    {
+      "Awake": 15,
+      "N1": 25,
+      "N2": 110,
+      "N3": 140,
+      "REM": 90,
+    },
+    {
+      "Awake": 25,
+      "N1": 20,
+      "N2": 120,
+      "N3": 130,
+      "REM": 70,
+    },
+    {
+      "Awake": 10,
+      "N1": 35,
+      "N2": 115,
+      "N3": 125,
+      "REM": 95,
+    },
+    {
+      "Awake": 18,
+      "N1": 28,
+      "N2": 108,
+      "N3": 138,
+      "REM": 88,
+    },
+    {
+      "Awake": 12,
+      "N1": 32,
+      "N2": 118,
+      "N3": 128,
+      "REM": 92,
+    },
+    {
+      "Awake": 22,
+      "N1": 27,
+      "N2": 112,
+      "N3": 132,
+      "REM": 78,
+    },
   ];
 
-  // Sample heart rate data
-  final List<FlSpot> heartRateData = [
-    FlSpot(0, 70),
-    FlSpot(1, 74),
-    FlSpot(2, 78),
-    FlSpot(3, 72),
-    FlSpot(4, 88),
-    FlSpot(5, 84),
-    FlSpot(6, 76),
-    FlSpot(7, 70),
-    FlSpot(8, 92),
-    FlSpot(9, 85),
-  ];
 
+
+  // Sample EEG data - not using anymore
+  // final List<FlSpot> eegData = [
+  // FlSpot(0, 10),
+  // FlSpot(1, -20),
+  // FlSpot(2, 50),
+  // FlSpot(3, -60),
+  // FlSpot(4, 80),
+  // FlSpot(5, -40),
+  // FlSpot(6, 30),
+  // FlSpot(7, -10),
+  // FlSpot(8, 20),
+  // FlSpot(9, 0),
+  // ];
+
+  // Sample heart rate data - not using anymore
+  // final List<FlSpot> heartRateData = [
+  // FlSpot(0, 70),
+  // FlSpot(1, 74),
+  // FlSpot(2, 78),
+  // FlSpot(3, 72),
+  // FlSpot(4, 88),
+  // FlSpot(5, 84),
+  // FlSpot(6, 76),
+  // FlSpot(7, 70),
+  // FlSpot(8, 92),
+  // FlSpot(9, 85),
+  // ];
+
+  final List<FlSpot> sleepStageData = [
+  FlSpot(0, 10), // Awake
+  FlSpot(1, 60), // N1
+  FlSpot(2, 75), // N2
+  FlSpot(3, 170), // N3
+  FlSpot(4, 200), // REM
+  ];
 
   final List<String> stageNames = [
     "W (Awake)",
@@ -196,6 +257,9 @@ class _InsightsPageState extends State<InsightsPage> {
           ),
            const SizedBox(height: 12),
           //EEGChart(eegData: eegData), //Build EEG Chart into insights Page
+
+          SleepStageComparisonChart(weeklyData: sleepStageData),
+
 
           // Second White Divider
           const Padding(
