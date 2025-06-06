@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'heart_rate_chart.dart';
-
-
-
+import 'EEG_chart.dart';
 import 'date_selector.dart';
 import 'line_chart.dart';
 import 'insight_box.dart';
@@ -22,6 +20,21 @@ class _InsightsPageState extends State<InsightsPage> {
 
   final List<int> durationsInMinutes = [10, 60, 75, 170, 200];
 
+    // Sample EEG data
+    final List<FlSpot> eegData = [
+    FlSpot(0, 10),
+    FlSpot(1, -20),
+    FlSpot(2, 50),
+    FlSpot(3, -60),
+    FlSpot(4, 80),
+    FlSpot(5, -40),
+    FlSpot(6, 30),
+    FlSpot(7, -10),
+    FlSpot(8, 20),
+    FlSpot(9, 0),
+  ];
+
+  // Sample heart rate data
   final List<FlSpot> heartRateData = [
     FlSpot(0, 70),
     FlSpot(1, 74),
@@ -34,7 +47,6 @@ class _InsightsPageState extends State<InsightsPage> {
     FlSpot(8, 92),
     FlSpot(9, 85),
   ];
-
 
 
   final List<String> stageNames = [
@@ -101,7 +113,6 @@ class _InsightsPageState extends State<InsightsPage> {
           child: Column(
             children: [
               const SizedBox(height: 40),
-
               const Text(
                 "Sleep Insights",
                 style: TextStyle(
@@ -113,6 +124,7 @@ class _InsightsPageState extends State<InsightsPage> {
               ),
               const SizedBox(height: 10),
 
+              //Select Date Functionality
               GestureDetector(
                 onTap: _pickDate,
                 child: Padding(
@@ -158,6 +170,7 @@ class _InsightsPageState extends State<InsightsPage> {
               ),
               const SizedBox(height: 20),
 
+              //First White Divider
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                 child: Divider(
@@ -166,23 +179,39 @@ class _InsightsPageState extends State<InsightsPage> {
                 ),
               ),
 
+              // Title for Other Charts 
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24.0),
                 child: Align(
                 alignment: Alignment.centerLeft,
-                child: Text(
-                  "Heart Rate (BPM)",
-                  style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
+                 child: Text(
+                   "Comparison Charts",
+                   style: TextStyle(
+                   fontSize: 26,
+                   fontWeight: FontWeight.bold,
+                   color: Colors.white,
+                 ),
+               ),
             ),
           ),
-          const SizedBox(height: 12),
-          HeartRateChart(heartRateData: heartRateData),
-          const SizedBox(height: 32),
+           const SizedBox(height: 12),
+          //EEGChart(eegData: eegData), //Build EEG Chart into insights Page
+
+          // Second White Divider
+          const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                child: Divider(
+                  color: Colors.white,
+                  thickness: 1.5,
+                ),
+              ),
+
+          //HeartRateChart(heartRateData: heartRateData), //Build HeartRate Chart into insights Page
+          const SizedBox(height: 10),
+
+          
+
+          
             ],
           ),
         ),

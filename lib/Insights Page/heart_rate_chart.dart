@@ -13,14 +13,14 @@ class HeartRateChart extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // const Text(
-          //   "Heart Rate (BPM)",
-          //   style: TextStyle(
-          //     fontSize: 20,
-          //     fontWeight: FontWeight.bold,
-          //     color: Colors.white,
-          //   ),
-          // ),
+          const Text(
+            "Heart Rate (BPM)",
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
           const SizedBox(height: 5),
           AspectRatio(
             aspectRatio: 1.8,
