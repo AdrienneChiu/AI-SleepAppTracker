@@ -15,7 +15,8 @@ class _LoginPageState extends State<LoginPage> {
 
   String? _errorMessage;
 
-  final String validEmail = 'test@example.com';
+  //Login details for login
+  final String validEmail = 'test@gmail.com';
   final String validPassword = '123456';
 
   void _handleLogin() {
@@ -38,9 +39,9 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.blue[800],
       body: Center(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 32.0),
           child: Form(
             key: _formKey,
@@ -48,36 +49,63 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 const Text(
-                  'Login',
-                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                  'Welcome to Sleep App',
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
                 const SizedBox(height: 24),
                 TextFormField(
                   controller: _emailController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Email',
-                    border: OutlineInputBorder(),
+                    labelStyle: const TextStyle(color: Colors.black),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
                   ),
+                  style: const TextStyle(color: Colors.black),
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _passwordController,
                   obscureText: true,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Password',
-                    border: OutlineInputBorder(),
+                    labelStyle: const TextStyle(color: Colors.black),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
                   ),
+                  style: const TextStyle(color: Colors.black),
                 ),
                 const SizedBox(height: 16),
                 if (_errorMessage != null)
                   Text(
                     _errorMessage!,
-                    style: const TextStyle(color: Colors.red),
+                    style: const TextStyle(color: Colors.redAccent),
                   ),
                 const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: _handleLogin,
-                  child: const Text('Login'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 7, 167, 241), // custom lighter blue colour
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: const Text(
+                    'Login',
+                    style: TextStyle(fontSize: 16),
+                  ),
                 ),
               ],
             ),
