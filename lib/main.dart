@@ -1,3 +1,4 @@
+import 'package:ai_sleepapp/login_page.dart';
 import 'package:flutter/material.dart';
 import 'navigation.dart';
 
@@ -21,7 +22,9 @@ class MyApp extends StatelessWidget {
           backgroundColor: Colors.blue[800], 
         ),
       ),
-      home: const NavigationExample(),
+      //home: const NavigationExample(),
+      home: const LoginPage(),
+
     );
   }
 }

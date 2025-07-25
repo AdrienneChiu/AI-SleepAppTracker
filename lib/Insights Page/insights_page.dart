@@ -18,7 +18,7 @@ class InsightsPage extends StatefulWidget {
 class _InsightsPageState extends State<InsightsPage> {
   DateTime selectedDate = DateTime.now();
 
-  // Weekly sleep data: One entry per day (simulate full week)
+  // Weekly sleep data: One entry per day (simulates a full week)
   final Map<DateTime, Map<String, double>> allSleepData = {
     DateTime(2025, 6, 2): {
       "Awake": 20,

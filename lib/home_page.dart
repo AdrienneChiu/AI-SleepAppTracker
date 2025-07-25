@@ -84,6 +84,21 @@ class _HomePageState extends State<HomePage> {
     return "${twoDigits(d.inHours)}:${twoDigits(d.inMinutes % 60)}:${twoDigits(d.inSeconds % 60)}";
   }
 
+  // Sleep score calculation method
+  double calculateSleepScore() {
+    List<double> weights = [0, 0.5, 0.75, 1.0, 1.0];
+    double weightedSum = 0;
+    double totalTime = 0;
+
+    for (int i = 0; i < sleepStageValues.length; i++) {
+      weightedSum += sleepStageValues[i] * weights[i];
+      totalTime += sleepStageValues[i];
+    }
+
+    if (totalTime == 0) return 0;
+    return (weightedSum / totalTime) * 100;
+  }
+
   @override
   void dispose() {
     if (isRunning) timer.cancel();
@@ -92,6 +107,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    double sleepScore = calculateSleepScore();
+
     return ListView(
       padding: const EdgeInsets.all(16.0),
       children: [
@@ -117,7 +134,7 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 10.0),
               SleepPieChart(values: sleepStageValues),
               const SizedBox(height: 16.0),
-              // Display formatted time in the same stopwatch format (hh:mm:ss)
+              // You can enable this to show stopwatch time if needed
               // Text(
               //   'Hours of Sleep: ${formatDuration(recordedSleepDuration)}',
               //   style: const TextStyle(
@@ -138,7 +155,6 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
-        
 
         // Sleep Score Section
         Container(
@@ -148,23 +164,26 @@ class _HomePageState extends State<HomePage> {
             color: Colors.blue[100],
             borderRadius: BorderRadius.circular(15.0),
           ),
-          child: Stack(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Column for title + stopwatch
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Your Sleep Score',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 34, 90, 188),
-                      height: 1.2,
-                    ),
-                  ),
-                  const SizedBox(height: 10), 
-                ],
+              const Text(
+                'Your Sleep Score',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 34, 90, 188),
+                  height: 1.2,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                sleepScore.toStringAsFixed(1), // Sleep score decimal point
+                style: const TextStyle(
+                  fontSize: 48,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 34, 90, 188),
+                ),
               ),
             ],
           ),
