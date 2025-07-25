@@ -13,7 +13,7 @@ class NavigationExample extends StatefulWidget {
 
 // Navigation bar state
 class _NavigationExampleState extends State<NavigationExample> {
-  int currentPageIndex = 0; // Tracks the current page index for the nav bar
+  int currentPageIndex = 1; // Tracks the current page index for the nav bar
 
   // Pages for navigation
   final List<Widget> pages = [
