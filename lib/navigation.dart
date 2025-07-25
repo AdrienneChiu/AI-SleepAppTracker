@@ -17,9 +17,9 @@ class _NavigationExampleState extends State<NavigationExample> {
 
   // Pages for navigation
   final List<Widget> pages = [
-    InsightsPage(),  
+    InsightsPage(),
     const HomePage(),
-    const InfoPage(),    
+    const InfoPage(),
   ];
 
   @override
@@ -27,17 +27,30 @@ class _NavigationExampleState extends State<NavigationExample> {
     final ThemeData theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          '', //If i ever need a title for app
-          style: TextStyle(
-            color: Colors.white, // Title text color
-            fontSize: 32, // Bigger font size
-            fontWeight: FontWeight.bold, // Bold text
-          ),
+        backgroundColor:
+            theme
+                .scaffoldBackgroundColor, // Match app bar color to primary color
+        title: const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(left: 16),
+              child: Text(
+                'SleepApp', //If i ever need a title for app
+                style: TextStyle(
+                  color: Colors.white, // Title text color
+                  fontSize: 32, // Bigger font size
+                  fontWeight: FontWeight.bold, // Bold text
+                ),
+              ),
+            ),
+          ],
         ),
-        backgroundColor: theme.scaffoldBackgroundColor, // Match app bar color to background
+        //backgroundColor: theme.scaffoldBackgroundColor, // Match app bar color to background
       ),
-      body: pages[currentPageIndex], // Display the page based on the current index
+      
+      body:
+          pages[currentPageIndex], // Display the page based on the current index
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
           setState(() {
@@ -49,12 +62,12 @@ class _NavigationExampleState extends State<NavigationExample> {
           NavigationDestination(
             selectedIcon: const Icon(Icons.insights, size: 50),
             icon: const Icon(Icons.insights_outlined, size: 50),
-            label: '',  // Home now points to the InsightsPage
+            label: '', // Home now points to the InsightsPage
           ),
           NavigationDestination(
             selectedIcon: const Icon(Icons.home, size: 50),
             icon: const Icon(Icons.home_outlined, size: 50),
-            label: '',  // Insights now points to the HomePage
+            label: '', // Insights now points to the HomePage
           ),
           NavigationDestination(
             selectedIcon: const Icon(Icons.info, size: 50),
