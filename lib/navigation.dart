@@ -2,77 +2,96 @@ import 'package:flutter/material.dart';
 import 'home_page.dart';
 import 'Insights Page/insights_page.dart';
 import 'Info Page/info_page.dart';
+import 'account_page.dart';
 
-// Navigation bar
 class NavigationExample extends StatefulWidget {
-  const NavigationExample({super.key});
+  final Map<String, String> userData;
+
+  const NavigationExample({super.key, required this.userData});
 
   @override
   State<NavigationExample> createState() => _NavigationExampleState();
 }
 
-// Navigation bar state
 class _NavigationExampleState extends State<NavigationExample> {
-  int currentPageIndex = 1; // Tracks the current page index for the nav bar
+  int currentPageIndex = 1; // Default to HomePage
 
-  // Pages for navigation
-  final List<Widget> pages = [
-    InsightsPage(),
-    const HomePage(),
-    const InfoPage(),
-  ];
+  final List<Widget> pages = [];
+
+  @override
+  void initState() {
+    super.initState();
+    pages.addAll([
+      InsightsPage(),
+      const HomePage(),
+      const InfoPage(),
+    ]);
+  }
+
+  void _goToAccountPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AccountPage(userData: widget.userData),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        backgroundColor:
-            theme
-                .scaffoldBackgroundColor, // Match app bar color to primary color
+        backgroundColor: theme.scaffoldBackgroundColor,
         title: const Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Padding(
               padding: EdgeInsets.only(left: 16),
               child: Text(
-                'SleepApp', //If i ever need a title for app
+                'SleepApp',
                 style: TextStyle(
-                  color: Colors.white, // Title text color
-                  fontSize: 32, // Bigger font size
-                  fontWeight: FontWeight.bold, // Bold text
+                  color: Colors.white,
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
           ],
         ),
-        //backgroundColor: theme.scaffoldBackgroundColor, // Match app bar color to background
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.account_circle, size: 32, color: Colors.white),
+            onPressed: _goToAccountPage,
+            tooltip: 'Account',
+          ),
+          const SizedBox(width: 12),
+        ],
       ),
-      
-      body:
-          pages[currentPageIndex], // Display the page based on the current index
+      body: pages[currentPageIndex],
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
           setState(() {
-            currentPageIndex = index; // Switch between pages
+            currentPageIndex = index;
           });
         },
         selectedIndex: currentPageIndex,
-        destinations: <Widget>[
+        destinations: const [
           NavigationDestination(
-            selectedIcon: const Icon(Icons.insights, size: 50),
-            icon: const Icon(Icons.insights_outlined, size: 50),
-            label: '', // Home now points to the InsightsPage
+            selectedIcon: Icon(Icons.insights, size: 50),
+            icon: Icon(Icons.insights_outlined, size: 50),
+            label: '',
           ),
           NavigationDestination(
-            selectedIcon: const Icon(Icons.home, size: 50),
-            icon: const Icon(Icons.home_outlined, size: 50),
-            label: '', // Insights now points to the HomePage
+            selectedIcon: Icon(Icons.home, size: 50),
+            icon: Icon(Icons.home_outlined, size: 50),
+            label: '',
           ),
           NavigationDestination(
-            selectedIcon: const Icon(Icons.info, size: 50),
-            icon: const Icon(Icons.info_outline, size: 50),
-            label: '', // Info page will show "PSG" title
+            selectedIcon: Icon(Icons.info, size: 50),
+            icon: Icon(Icons.info_outline, size: 50),
+            label: '',
           ),
         ],
       ),

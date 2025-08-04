@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'navigation.dart'; // Import your navigation/home page
+import '../navigation.dart'; // Import your navigation/home page
+import 'signin_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -15,24 +16,43 @@ class _LoginPageState extends State<LoginPage> {
 
   String? _errorMessage;
 
-  //Login details for login
-  final String validEmail = 'test@gmail.com';
-  final String validPassword = '123456';
+  Map<String, String> userData = {}; // To store user signup data
 
   void _handleLogin() {
     final email = _emailController.text;
     final password = _passwordController.text;
 
-    if (email == validEmail && password == validPassword) {
-      setState(() => _errorMessage = null);
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const NavigationExample()),
-      );
+    if (userData.isNotEmpty) {
+      if (email == userData['email'] && password == userData['password']) {
+        setState(() => _errorMessage = null);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => NavigationExample(userData: userData),
+          ),
+        );
+      } else {
+        setState(() {
+          _errorMessage = 'Invalid email or password';
+        });
+      }
     } else {
       setState(() {
-        _errorMessage = 'Invalid email or password';
+        _errorMessage = 'Please create an account first';
       });
+    }
+  }
+
+  void _goToSignupPage() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const SignupPage()),
+    );
+
+    if (result != null && result is Map<String, String>) {
+      userData = result;
+      // Optionally prefill email for convenience:
+      _emailController.text = userData['email']!;
     }
   }
 
@@ -95,7 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                 ElevatedButton(
                   onPressed: _handleLogin,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 7, 167, 241), // custom lighter blue 
+                    backgroundColor: const Color.fromARGB(255, 7, 167, 241),
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
                     shape: RoundedRectangleBorder(
@@ -106,6 +126,15 @@ class _LoginPageState extends State<LoginPage> {
                     'Login',
                     style: TextStyle(fontSize: 16),
                   ),
+                ),
+                const SizedBox(height: 12),
+                TextButton(
+                  onPressed: _goToSignupPage,
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    textStyle: const TextStyle(fontSize: 14, decoration: TextDecoration.underline),
+                  ),
+                  child: const Text("Create Account"),
                 ),
               ],
             ),
