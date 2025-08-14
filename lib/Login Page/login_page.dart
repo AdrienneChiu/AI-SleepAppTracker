@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../navigation.dart'; // Import your navigation/home page
+import '../navigation.dart';
+import '../database/database_helper.dart';
 import 'signin_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -15,31 +16,32 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
 
   String? _errorMessage;
+  Map<String, dynamic>? userData; // Updated to dynamic
 
-  Map<String, String> userData = {}; // To store user signup data
+  void _handleLogin() async {
+    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+      setState(() => _errorMessage = 'Please enter email and password');
+      return;
+    }
 
-  void _handleLogin() {
-    final email = _emailController.text;
-    final password = _passwordController.text;
+    final db = DatabaseHelper();
+    final user = await db.getUser(_emailController.text);
 
-    if (userData.isNotEmpty) {
-      if (email == userData['email'] && password == userData['password']) {
+    if (user != null) {
+      if (_passwordController.text == user['password']) {
         setState(() => _errorMessage = null);
+        userData = user;
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => NavigationExample(userData: userData),
+            builder: (context) => NavigationExample(userData: userData!),
           ),
         );
       } else {
-        setState(() {
-          _errorMessage = 'Invalid email or password';
-        });
+        setState(() => _errorMessage = 'Incorrect password');
       }
     } else {
-      setState(() {
-        _errorMessage = 'Please create an account first';
-      });
+      setState(() => _errorMessage = 'User not found, please sign up first');
     }
   }
 
@@ -49,10 +51,9 @@ class _LoginPageState extends State<LoginPage> {
       MaterialPageRoute(builder: (context) => const SignupPage()),
     );
 
-    if (result != null && result is Map<String, String>) {
+    if (result != null && result is Map<String, dynamic>) {
       userData = result;
-      // Optionally prefill email for convenience:
-      _emailController.text = userData['email']!;
+      _emailController.text = userData!['email']; // Prefill email after signup
     }
   }
 
@@ -132,7 +133,10 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: _goToSignupPage,
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.white,
-                    textStyle: const TextStyle(fontSize: 14, decoration: TextDecoration.underline),
+                    textStyle: const TextStyle(
+                      fontSize: 14,
+                      decoration: TextDecoration.underline,
+                    ),
                   ),
                   child: const Text("Create Account"),
                 ),

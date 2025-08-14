@@ -30,6 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  sqflite: ^2.2.7+1
   fl_chart: ^0.71.0
   intl: ^0.18.1
 
