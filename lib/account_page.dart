@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../Login Page/login_page.dart';
 
 class AccountPage extends StatelessWidget {
   final Map<String, String> userData;
@@ -24,6 +25,29 @@ class AccountPage extends StatelessWidget {
             _buildInfoCard(Icons.cake, 'Age', userData['age'] ?? ''),
             _buildInfoCard(Icons.height, 'Height (cm)', userData['height'] ?? ''),
             _buildInfoCard(Icons.monitor_weight, 'Weight (kg)', userData['weight'] ?? ''),
+            const SizedBox(height: 32),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  // Navigate back to login page
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
+                    (route) => false,
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                ),
+                child: const Text(
+                  'Log Out',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            ),
           ],
         ),
       ),

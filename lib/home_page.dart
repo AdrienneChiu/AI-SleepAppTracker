@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:ai_sleepapp/database/view_users_page.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
@@ -188,6 +189,15 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
+        IconButton(
+          icon: const Icon(Icons.list),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ViewUsersPage()),
+              );
+            },
+        ) // Temp button to see all user details saved
       ],
     );
   }

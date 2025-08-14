@@ -1,7 +1,7 @@
 // Main Insights UI Page
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-//import 'package:fl_chart/fl_chart.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 import 'sleep_stage_comparison_chart.dart';
 import 'date_selector.dart';
