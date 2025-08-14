@@ -5,7 +5,7 @@ import 'Info Page/info_page.dart';
 import 'account_page.dart';
 
 class NavigationExample extends StatefulWidget {
-  final Map<String, String> userData;
+  final Map<String, dynamic> userData; // Updated type to dynamic
 
   const NavigationExample({super.key, required this.userData});
 
@@ -15,7 +15,6 @@ class NavigationExample extends StatefulWidget {
 
 class _NavigationExampleState extends State<NavigationExample> {
   int currentPageIndex = 1; // Default to HomePage
-
   final List<Widget> pages = [];
 
   @override
@@ -24,7 +23,7 @@ class _NavigationExampleState extends State<NavigationExample> {
     pages.addAll([
       InsightsPage(),
       const HomePage(),
-      const InfoPage(),
+      InfoPage(), // Removed userData parameter since it's not defined in InfoPage
     ]);
   }
 
@@ -32,7 +31,9 @@ class _NavigationExampleState extends State<NavigationExample> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => AccountPage(userData: widget.userData),
+        builder: (context) => AccountPage(
+          userData: widget.userData.map((key, value) => MapEntry(key, value.toString())),
+        ),
       ),
     );
   }
