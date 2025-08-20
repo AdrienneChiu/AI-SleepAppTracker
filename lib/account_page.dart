@@ -25,7 +25,7 @@ class AccountPage extends StatelessWidget {
             _buildInfoCard(Icons.cake, 'Age', userData['age'] ?? ''),
             _buildInfoCard(Icons.height, 'Height (cm)', userData['height'] ?? ''),
             _buildInfoCard(Icons.monitor_weight, 'Weight (kg)', userData['weight'] ?? ''),
-            const SizedBox(height: 32),
+            const SizedBox(height: 16),
             Center(
               child: ElevatedButton(
                 onPressed: () {
@@ -37,7 +37,8 @@ class AccountPage extends StatelessWidget {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
+                  backgroundColor: const Color.fromARGB(255, 236, 78, 67),
+                  foregroundColor: Colors.black,
                   padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12)),

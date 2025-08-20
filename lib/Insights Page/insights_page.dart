@@ -1,8 +1,8 @@
 // Main Insights UI Page
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:fl_chart/fl_chart.dart';
-
+//import 'package:fl_chart/fl_chart.dart';
+import 'dummy_sleep_data.dart';
 import 'sleep_stage_comparison_chart.dart';
 import 'date_selector.dart';
 import 'line_chart.dart';
@@ -19,57 +19,7 @@ class _InsightsPageState extends State<InsightsPage> {
   DateTime selectedDate = DateTime.now();
 
   // Weekly sleep data: One entry per day (simulates a full week)
-  final Map<DateTime, Map<String, double>> allSleepData = {
-    DateTime(2025, 6, 2): {
-      "Awake": 20,
-      "N1": 30,
-      "N2": 100,
-      "N3": 150,
-      "REM": 80,
-    },
-    DateTime(2025, 6, 3): {
-      "Awake": 15,
-      "N1": 25,
-      "N2": 110,
-      "N3": 140,
-      "REM": 90,
-    },
-    DateTime(2025, 6, 4): {
-      "Awake": 25,
-      "N1": 20,
-      "N2": 120,
-      "N3": 130,
-      "REM": 70,
-    },
-    DateTime(2025, 6, 5): {
-      "Awake": 10,
-      "N1": 35,
-      "N2": 115,
-      "N3": 125,
-      "REM": 95,
-    },
-    DateTime(2025, 6, 6): {
-      "Awake": 18,
-      "N1": 28,
-      "N2": 108,
-      "N3": 138,
-      "REM": 88,
-    },
-    DateTime(2025, 6, 7): {
-      "Awake": 12,
-      "N1": 32,
-      "N2": 118,
-      "N3": 128,
-      "REM": 92,
-    },
-    DateTime(2025, 6, 8): {
-      "Awake": 22,
-      "N1": 27,
-      "N2": 112,
-      "N3": 132,
-      "REM": 78,
-    },
-  };
+  final Map<DateTime, Map<String, double>> allSleepData = dummySleepData; //dummy data
 
   final List<String> stageKeys = ["Awake", "N1", "N2", "N3", "REM"];
 
