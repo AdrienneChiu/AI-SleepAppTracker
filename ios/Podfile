@@ -1,21 +1,37 @@
-platform :ios, '12.0'
+platform :ios, '13.0'
+use_frameworks! :linkage => :static
+use_modular_headers!
 
-# Point to your app root, then require Flutter's podhelper from the Flutter SDK
-flutter_application_path = File.expand_path('..', __dir__)
-require File.expand_path(File.join(flutter_application_path, 'packages', 'flutter_tools', 'bin', 'podhelper'))
+ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 
-# Set up Flutter iOS pods
+project 'Runner', {
+  'Debug' => :debug,
+  'Profile' => :release,
+  'Release' => :release,
+}
+
+# Discover FLUTTER_ROOT from Generated.xcconfig and then load Flutter's podhelper
+def flutter_root
+  generated = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __FILE__)
+  unless File.exist?(generated)
+    raise "#{generated} must exist. Run `flutter pub get` first."
+  end
+  File.foreach(generated) do |line|
+    m = line.match(/FLUTTER_ROOT\=(.*)/)
+    return m[1].strip if m
+  end
+  raise "FLUTTER_ROOT not found in #{generated}."
+end
+
+require File.expand_path(File.join(flutter_root, 'packages', 'flutter_tools', 'bin', 'podhelper'), __FILE__)
+
 flutter_ios_podfile_setup
 
 target 'Runner' do
-  # Static linking tends to play nicer with many pods
-  use_frameworks! :linkage => :static
-  use_modular_headers!
-
-  # Install all Flutter plugin pods
+  # Install Flutter plugin pods
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 
-  # Your model needs Select TF Ops. Pin version to match TensorFlowLiteC/Swift 2.12.0
+  # Your TFLite model needs Select TF Ops
   pod 'TensorFlowLiteSelectTfOps', '2.12.0'
 
   target 'RunnerTests' do
@@ -24,13 +40,14 @@ target 'Runner' do
 end
 
 post_install do |installer|
-  # Harmonize simulator arch to avoid EXCLUDED_ARCHS warnings on Apple Silicon
   installer.pods_project.targets.each do |t|
     t.build_configurations.each do |config|
+      # keep your existing EXCLUDED_ARCHS line if present
       config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'arm64'
+      # >>> add this line <<<
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
     end
   end
-
-  # Apply Flutter's additional build settings (important!)
   flutter_additional_ios_build_settings(installer)
 end
+
