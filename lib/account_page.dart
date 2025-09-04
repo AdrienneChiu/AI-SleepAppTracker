@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../Login Page/login_page.dart';
+import 'login_page/login_page.dart';
 
 class AccountPage extends StatelessWidget {
   final Map<String, String> userData;

@@ -33,6 +33,8 @@ dependencies:
   sqflite: ^2.2.7+1
   fl_chart: ^0.71.0
   intl: ^0.18.1
+  tflite_flutter: ^0.10.4
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -54,7 +56,8 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
+  assets:
+  - assets/models/attnsleep_fp16.tflite  
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
