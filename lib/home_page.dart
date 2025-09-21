@@ -189,7 +189,7 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
-        IconButton(
+        IconButton( // Temp button to see all user details saved
           icon: const Icon(Icons.list),
           onPressed: () {
             Navigator.push(
