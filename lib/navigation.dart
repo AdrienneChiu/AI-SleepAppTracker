@@ -6,7 +6,7 @@ import 'Insights Page/insights_page.dart';
 import 'Info Page/info_page.dart';
 import 'account_page.dart';
 
-// Generated sleep data
+// Generated sleep data for 42 nights
 import 'package:provider/provider.dart';
 import 'providers/sleep_data_provider.dart';
 import 'models/sleep_stage_result.dart';
