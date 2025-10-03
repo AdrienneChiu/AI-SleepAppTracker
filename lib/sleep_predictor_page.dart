@@ -7,6 +7,7 @@ import 'attnsleep.dart'; // my model runner
 import 'models/sleep_stage_result.dart';
 import 'providers/sleep_data_provider.dart';
 import 'utils/aggregator.dart';
+import 'utils/label_map.dart'; // ⬅️ NEW: map model label "W" -> "Awake"
 
 class SleepPredictorPage extends StatefulWidget {
   const SleepPredictorPage({super.key});
@@ -21,7 +22,7 @@ class _SleepPredictorPageState extends State<SleepPredictorPage> {
   bool _running = false;
   double _progress = 0.0;
   List<double> _lastProbs = [];
-  String? _lastLabel;
+  String? _lastLabel; // display label ("Awake","N1","N2","N3","REM")
 
   @override
   void initState() {
@@ -56,7 +57,7 @@ class _SleepPredictorPageState extends State<SleepPredictorPage> {
       _lastLabel = null;
     });
 
-    final preds = <int>[];
+    final preds = <int>[]; // collect model indices 0..4
 
     for (int e = 0; e < epochs; e++) {
       // create a dummy 3000-length Float32List window (replace with real data)
@@ -64,10 +65,10 @@ class _SleepPredictorPageState extends State<SleepPredictorPage> {
         List<double>.generate(_runner.windowLength, (_) => math.Random().nextDouble()),
       );
 
-      // YOUR AttnSleep.predict returns a record (label, idx, probs)
+      // AttnSleep.predict returns (label, idx, probs)
       final res = _runner.predict(window);
-      final int idx = res.$2; // record index position 2 is int index
-      final List<double> probs = res.$3; // record position 3 = probs
+      final int idx = res.$2;           // 0..4
+      final List<double> probs = res.$3; // probabilities per stage
 
       preds.add(idx);
 
@@ -76,9 +77,8 @@ class _SleepPredictorPageState extends State<SleepPredictorPage> {
         setState(() {
           _progress = (e + 1) / epochs;
           _lastProbs = probs;
-          _lastLabel = res.$1;
+          _lastLabel = LabelMap.toDisplay(res.$1); // ⬅️ display key ("W" -> "Awake")
         });
-        // yield to UI
         await Future.delayed(Duration.zero);
       }
     }
@@ -88,11 +88,14 @@ class _SleepPredictorPageState extends State<SleepPredictorPage> {
       _progress = 1.0;
     });
 
-    // Aggregate into minutes:
-    final durations = aggregateSleepStages(preds);
+    // Aggregate indices into minutes per stage, using display keys internally
+    final durations = aggregateSleepStages(preds); // -> {"Awake": x, "N1":..., "REM":...}
 
     // Store result in provider
-    final result = SleepStageResult(timestamp: DateTime.now(), stageDurations: durations);
+    final result = SleepStageResult(
+      timestamp: DateTime.now(),
+      stageDurations: durations,
+    );
     Provider.of<SleepDataProvider>(context, listen: false).addResult(result);
 
     // Update UI
@@ -100,12 +103,15 @@ class _SleepPredictorPageState extends State<SleepPredictorPage> {
       _running = false;
     });
 
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Prediction saved to app data')));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(const SnackBar(content: Text('Prediction saved to app data')));
   }
 
   @override
   Widget build(BuildContext context) {
-    final labels = AttnSleep.labels;
+    // model labels are ["W","N1","N2","N3","REM"]; we'll show display versions below
+    final modelLabels = AttnSleep.labels;
+
     return Scaffold(
       appBar: AppBar(title: const Text('Sleep Stage Predictor')),
       backgroundColor: Colors.blue[800],
@@ -113,28 +119,38 @@ class _SleepPredictorPageState extends State<SleepPredictorPage> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            if (!_modelLoaded) const Text('Loading model...', style: TextStyle(color: Colors.white)),
+            if (!_modelLoaded)
+              const Text('Loading model...', style: TextStyle(color: Colors.white)),
             if (_modelLoaded && !_running)
               ElevatedButton(
-                onPressed: () => _runDummyNight(epochs: 480), // default number of epochs for dummy night
+                onPressed: () => _runDummyNight(epochs: 480),
                 child: const Text('Run Dummy Full-Night Prediction'),
               ),
             if (_running) ...[
               LinearProgressIndicator(value: _progress),
               const SizedBox(height: 8),
-              Text('${(_progress * 100).toStringAsFixed(0)}% completed', style: const TextStyle(color: Colors.white)),
+              Text(
+                '${(_progress * 100).toStringAsFixed(0)}% completed',
+                style: const TextStyle(color: Colors.white),
+              ),
             ],
             const SizedBox(height: 16),
             if (_lastLabel != null) ...[
-              Text('Last epoch predicted: $_lastLabel', style: const TextStyle(color: Colors.white, fontSize: 18)),
+              Text(
+                'Last epoch predicted: $_lastLabel', // already mapped to display key
+                style: const TextStyle(color: Colors.white, fontSize: 18),
+              ),
               const SizedBox(height: 8),
             ],
             if (_lastProbs.isNotEmpty)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: List.generate(_lastProbs.length, (i) {
-                  return Text('${labels[i]}: ${(_lastProbs[i] * 100).toStringAsFixed(1)}%',
-                      style: const TextStyle(color: Colors.white));
+                  final display = LabelMap.toDisplay(modelLabels[i]); // "W" -> "Awake"
+                  return Text(
+                    '$display: ${(_lastProbs[i] * 100).toStringAsFixed(1)}%',
+                    style: const TextStyle(color: Colors.white),
+                  );
                 }),
               ),
           ],
@@ -143,4 +159,3 @@ class _SleepPredictorPageState extends State<SleepPredictorPage> {
     );
   }
 }
-

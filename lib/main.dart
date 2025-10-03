@@ -1,11 +1,14 @@
-import 'package:ai_sleepapp/login_page/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'sleep_predictor_page.dart';
-import 'providers/sleep_data_provider.dart';
 
+import 'providers/sleep_data_provider.dart';
+import 'login_page/login_page.dart';
+import 'navigation.dart';                
+import 'sleep_predictor_page.dart';
+import 'Insights Page/insights_page.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(
     ChangeNotifierProvider(
       create: (_) => SleepDataProvider(),
@@ -16,9 +19,11 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter App for AI Sleep',
       theme: ThemeData(
         useMaterial3: true,
@@ -26,10 +31,13 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.blue[800],
         appBarTheme: AppBarTheme(backgroundColor: Colors.blue[800]),
       ),
+      initialRoute: '/login',
       routes: {
+        '/login': (_) => const LoginPage(),
+        '/home': (_) => const NavigationExample(),  
+        '/insights': (_) => const InsightsPage(),    
         '/predict': (_) => const SleepPredictorPage(),
       },
-      home: const LoginPage(),
     );
   }
 }

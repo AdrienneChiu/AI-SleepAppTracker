@@ -30,6 +30,9 @@ flutter_ios_podfile_setup
 target 'Runner' do
   use_frameworks!
 
+  # Added TensorFlow Lite Select TF Ops pod
+  pod 'TensorFlowLiteSelectTfOps', '~> 2.14.0' 
+
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
   target 'RunnerTests' do
     inherit! :search_paths

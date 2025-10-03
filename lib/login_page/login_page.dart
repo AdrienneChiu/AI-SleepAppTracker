@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../navigation.dart';
 import '../database/database_helper.dart';
 import 'signin_page.dart';
 
@@ -16,9 +15,9 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
 
   String? _errorMessage;
-  Map<String, dynamic>? userData; // Updated to dynamic
+  Map<String, dynamic>? userData;
 
-  void _handleLogin() async {
+  Future<void> _handleLogin() async {
     if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
       setState(() => _errorMessage = 'Please enter email and password');
       return;
@@ -31,12 +30,9 @@ class _LoginPageState extends State<LoginPage> {
       if (_passwordController.text == user['password']) {
         setState(() => _errorMessage = null);
         userData = user;
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => NavigationExample(userData: userData!),
-          ),
-        );
+
+        
+        Navigator.of(context).pushReplacementNamed('/home');
       } else {
         setState(() => _errorMessage = 'Incorrect password');
       }
@@ -53,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
 
     if (result != null && result is Map<String, dynamic>) {
       userData = result;
-      _emailController.text = userData!['email']; // Prefill email after signup
+      _emailController.text = userData!['email'];
     }
   }
 
@@ -108,10 +104,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 16),
                 if (_errorMessage != null)
-                  Text(
-                    _errorMessage!,
-                    style: const TextStyle(color: Colors.redAccent),
-                  ),
+                  Text(_errorMessage!, style: const TextStyle(color: Colors.redAccent)),
                 const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: _handleLogin,
@@ -119,24 +112,16 @@ class _LoginPageState extends State<LoginPage> {
                     backgroundColor: const Color.fromARGB(255, 7, 167, 241),
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: const Text(
-                    'Login',
-                    style: TextStyle(fontSize: 16),
-                  ),
+                  child: const Text('Login', style: TextStyle(fontSize: 16)),
                 ),
                 const SizedBox(height: 12),
                 TextButton(
                   onPressed: _goToSignupPage,
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.white,
-                    textStyle: const TextStyle(
-                      fontSize: 14,
-                      decoration: TextDecoration.underline,
-                    ),
+                    textStyle: const TextStyle(fontSize: 14, decoration: TextDecoration.underline),
                   ),
                   child: const Text("Create Account"),
                 ),

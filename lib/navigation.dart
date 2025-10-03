@@ -1,30 +1,57 @@
 import 'package:flutter/material.dart';
+
+// Your pages
 import 'home_page.dart';
 import 'Insights Page/insights_page.dart';
 import 'Info Page/info_page.dart';
 import 'account_page.dart';
 
-class NavigationExample extends StatefulWidget {
-  final Map<String, dynamic> userData; // Updated type to dynamic
+// Generated sleep data for 42 nights
+import 'package:provider/provider.dart';
+import 'providers/sleep_data_provider.dart';
+import 'models/sleep_stage_result.dart';
+import 'utils/synthetic_sleep.dart';
 
-  const NavigationExample({super.key, required this.userData});
+class NavigationExample extends StatefulWidget {
+  final Map<String, dynamic>? userData; // nullable
+
+  const NavigationExample({super.key, this.userData});
 
   @override
   State<NavigationExample> createState() => _NavigationExampleState();
 }
 
 class _NavigationExampleState extends State<NavigationExample> {
-  int currentPageIndex = 1; // Default to HomePage
-  final List<Widget> pages = [];
+  int currentPageIndex = 1; // default = HomePage
+  late final List<Widget> pages;
 
   @override
   void initState() {
     super.initState();
-    pages.addAll([
+
+    pages = const [
       InsightsPage(),
-      const HomePage(),
-      InfoPage(), // Removed userData parameter since it's not defined in InfoPage
-    ]);
+      HomePage(),
+      InfoPage(),
+    ];
+
+    // Seed several weeks of fake nights only once (when no data exists yet).
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final p = Provider.of<SleepDataProvider>(context, listen: false);
+      if (p.results.isEmpty) {
+        _seedPastNights(p, days: 42); // ~6 weeks; change to taste (e.g., 21 = 3 weeks)
+      }
+    });
+  }
+
+  void _seedPastNights(SleepDataProvider p, {int days = 42}) {
+    final now = DateTime.now();
+    // Seed oldest -> newest so provider.latest is the most recent day
+    for (int i = days; i >= 1; i--) {
+      final date = DateTime(now.year, now.month, now.day).subtract(Duration(days: i));
+      final map = syntheticNight(seed: date.millisecondsSinceEpoch);
+      p.addResult(SleepStageResult(timestamp: date, stageDurations: map));
+    }
   }
 
   void _goToAccountPage() {
@@ -32,7 +59,7 @@ class _NavigationExampleState extends State<NavigationExample> {
       context,
       MaterialPageRoute(
         builder: (context) => AccountPage(
-          userData: widget.userData.map((key, value) => MapEntry(key, value.toString())),
+          userData: widget.userData?.map((k, v) => MapEntry(k, v.toString())) ?? {},
         ),
       ),
     );
@@ -40,43 +67,33 @@ class _NavigationExampleState extends State<NavigationExample> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: theme.scaffoldBackgroundColor,
-        title: const Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(left: 16),
-              child: Text(
-                'SleepApp',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+        title: const Padding(
+          padding: EdgeInsets.only(left: 16),
+          child: Text(
+            'SleepApp',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 32,
+              fontWeight: FontWeight.bold,
             ),
-          ],
+          ),
         ),
         actions: [
           IconButton(
             icon: const Icon(Icons.account_circle, size: 32, color: Colors.white),
             onPressed: _goToAccountPage,
-            tooltip: 'Account',
           ),
           const SizedBox(width: 12),
         ],
       ),
       body: pages[currentPageIndex],
       bottomNavigationBar: NavigationBar(
-        onDestinationSelected: (int index) {
-          setState(() {
-            currentPageIndex = index;
-          });
-        },
+        onDestinationSelected: (index) => setState(() => currentPageIndex = index),
         selectedIndex: currentPageIndex,
         destinations: const [
           NavigationDestination(
