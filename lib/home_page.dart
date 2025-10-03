@@ -79,7 +79,7 @@ class _HomePageState extends State<HomePage> {
         return ListView(
           padding: const EdgeInsets.all(16.0),
           children: [
-            // DEBUG: shows if provider is shared
+            // DEBUG PURPOSE: DELETE LATER
             Text(
               'Nights saved: ${provider.results.length}',
               style: const TextStyle(color: Colors.white),
