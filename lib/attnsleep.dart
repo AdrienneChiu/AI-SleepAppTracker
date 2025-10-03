@@ -13,7 +13,7 @@ class AttnSleep {
   Future<void> load() async {
     final opts = InterpreterOptions()..threads = 2;
     _interpreter = await Interpreter.fromAsset(
-      'models/attnsleep_fp16.tflite', 
+      'assets/models/attnsleep_fp16.tflite', 
       options: opts,
     );
 

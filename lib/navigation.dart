@@ -5,26 +5,26 @@ import 'Info Page/info_page.dart';
 import 'account_page.dart';
 
 class NavigationExample extends StatefulWidget {
-  final Map<String, dynamic> userData; // Updated type to dynamic
+  final Map<String, dynamic>? userData; // nullable
 
-  const NavigationExample({super.key, required this.userData});
+  const NavigationExample({super.key, this.userData});
 
   @override
   State<NavigationExample> createState() => _NavigationExampleState();
 }
 
 class _NavigationExampleState extends State<NavigationExample> {
-  int currentPageIndex = 1; // Default to HomePage
-  final List<Widget> pages = [];
+  int currentPageIndex = 1; // default = HomePage
+  late final List<Widget> pages;
 
   @override
   void initState() {
     super.initState();
-    pages.addAll([
-      InsightsPage(),
+    pages = [
+      const InsightsPage(),
       const HomePage(),
-      InfoPage(), // Removed userData parameter since it's not defined in InfoPage
-    ]);
+      const InfoPage(),
+    ];
   }
 
   void _goToAccountPage() {
@@ -32,7 +32,7 @@ class _NavigationExampleState extends State<NavigationExample> {
       context,
       MaterialPageRoute(
         builder: (context) => AccountPage(
-          userData: widget.userData.map((key, value) => MapEntry(key, value.toString())),
+          userData: widget.userData?.map((k, v) => MapEntry(k, v.toString())) ?? {},
         ),
       ),
     );
@@ -40,43 +40,33 @@ class _NavigationExampleState extends State<NavigationExample> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: theme.scaffoldBackgroundColor,
-        title: const Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(left: 16),
-              child: Text(
-                'SleepApp',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+        title: const Padding(
+          padding: EdgeInsets.only(left: 16),
+          child: Text(
+            'SleepApp',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 32,
+              fontWeight: FontWeight.bold,
             ),
-          ],
+          ),
         ),
         actions: [
           IconButton(
             icon: const Icon(Icons.account_circle, size: 32, color: Colors.white),
             onPressed: _goToAccountPage,
-            tooltip: 'Account',
           ),
           const SizedBox(width: 12),
         ],
       ),
       body: pages[currentPageIndex],
       bottomNavigationBar: NavigationBar(
-        onDestinationSelected: (int index) {
-          setState(() {
-            currentPageIndex = index;
-          });
-        },
+        onDestinationSelected: (index) => setState(() => currentPageIndex = index),
         selectedIndex: currentPageIndex,
         destinations: const [
           NavigationDestination(
