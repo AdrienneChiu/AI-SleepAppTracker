@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 // Your pages
 import 'home_page.dart';
@@ -6,16 +7,16 @@ import 'Insights Page/insights_page.dart';
 import 'Info Page/info_page.dart';
 import 'account_page.dart';
 
-// Generated sleep data for 42 nights
-import 'package:provider/provider.dart';
+// Providers
 import 'providers/sleep_data_provider.dart';
+import 'providers/session_provider.dart';
+
+// Models + utils
 import 'models/sleep_stage_result.dart';
 import 'utils/synthetic_sleep.dart';
 
 class NavigationExample extends StatefulWidget {
-  final Map<String, dynamic>? userData; // nullable
-
-  const NavigationExample({super.key, this.userData});
+  const NavigationExample({super.key});
 
   @override
   State<NavigationExample> createState() => _NavigationExampleState();
@@ -39,7 +40,7 @@ class _NavigationExampleState extends State<NavigationExample> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final p = Provider.of<SleepDataProvider>(context, listen: false);
       if (p.results.isEmpty) {
-        _seedPastNights(p, days: 42); // ~6 weeks; change to taste (e.g., 21 = 3 weeks)
+        _seedPastNights(p, days: 42); // ~6 weeks; adjust as needed
       }
     });
   }
@@ -48,18 +49,22 @@ class _NavigationExampleState extends State<NavigationExample> {
     final now = DateTime.now();
     // Seed oldest -> newest so provider.latest is the most recent day
     for (int i = days; i >= 1; i--) {
-      final date = DateTime(now.year, now.month, now.day).subtract(Duration(days: i));
+      final date =
+          DateTime(now.year, now.month, now.day).subtract(Duration(days: i));
       final map = syntheticNight(seed: date.millisecondsSinceEpoch);
       p.addResult(SleepStageResult(timestamp: date, stageDurations: map));
     }
   }
 
   void _goToAccountPage() {
+    final session = Provider.of<SessionProvider>(context, listen: false);
+    final userData = session.user ?? {};
+
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => AccountPage(
-          userData: widget.userData?.map((k, v) => MapEntry(k, v.toString())) ?? {},
+          userData: userData.map((k, v) => MapEntry(k, v.toString())),
         ),
       ),
     );
@@ -93,7 +98,8 @@ class _NavigationExampleState extends State<NavigationExample> {
       ),
       body: pages[currentPageIndex],
       bottomNavigationBar: NavigationBar(
-        onDestinationSelected: (index) => setState(() => currentPageIndex = index),
+        onDestinationSelected: (index) =>
+            setState(() => currentPageIndex = index),
         selectedIndex: currentPageIndex,
         destinations: const [
           NavigationDestination(

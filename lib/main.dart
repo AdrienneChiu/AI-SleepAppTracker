@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+// Providers
 import 'providers/sleep_data_provider.dart';
+import 'providers/session_provider.dart';
+
+// Screens
 import 'login_page/login_page.dart';
-import 'navigation.dart';                
+import 'navigation.dart';
 import 'sleep_predictor_page.dart';
 import 'Insights Page/insights_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => SleepDataProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => SleepDataProvider()),
+        ChangeNotifierProvider(create: (_) => SessionProvider()), // ✅ holds logged-in user
+      ],
       child: const MyApp(),
     ),
   );
@@ -34,8 +41,8 @@ class MyApp extends StatelessWidget {
       initialRoute: '/login',
       routes: {
         '/login': (_) => const LoginPage(),
-        '/home': (_) => const NavigationExample(),  
-        '/insights': (_) => const InsightsPage(),    
+        '/home': (_) => const NavigationExample(), 
+        '/insights': (_) => const InsightsPage(),
         '/predict': (_) => const SleepPredictorPage(),
       },
     );
