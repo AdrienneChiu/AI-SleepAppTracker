@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import '../database/database_helper.dart';
 import 'signin_page.dart';
+import '../providers/session_provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -15,7 +18,6 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
 
   String? _errorMessage;
-  Map<String, dynamic>? userData;
 
   Future<void> _handleLogin() async {
     if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
@@ -29,9 +31,13 @@ class _LoginPageState extends State<LoginPage> {
     if (user != null) {
       if (_passwordController.text == user['password']) {
         setState(() => _errorMessage = null);
-        userData = user;
 
-        
+        // ✅ Save into SessionProvider
+        final session = Provider.of<SessionProvider>(context, listen: false);
+        session.setUser(user);
+
+        debugPrint("Logged in user: $user");
+
         Navigator.of(context).pushReplacementNamed('/home');
       } else {
         setState(() => _errorMessage = 'Incorrect password');
@@ -48,8 +54,8 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     if (result != null && result is Map<String, dynamic>) {
-      userData = result;
-      _emailController.text = userData!['email'];
+      // Prefill email after signup
+      _emailController.text = result['email'];
     }
   }
 
@@ -104,24 +110,36 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 16),
                 if (_errorMessage != null)
-                  Text(_errorMessage!, style: const TextStyle(color: Colors.redAccent)),
+                  Text(
+                    _errorMessage!,
+                    style: const TextStyle(color: Colors.redAccent),
+                  ),
                 const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: _handleLogin,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 7, 167, 241),
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 32, vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
-                  child: const Text('Login', style: TextStyle(fontSize: 16)),
+                  child: const Text(
+                    'Login',
+                    style: TextStyle(fontSize: 16),
+                  ),
                 ),
                 const SizedBox(height: 12),
                 TextButton(
                   onPressed: _goToSignupPage,
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.white,
-                    textStyle: const TextStyle(fontSize: 14, decoration: TextDecoration.underline),
+                    textStyle: const TextStyle(
+                      fontSize: 14,
+                      decoration: TextDecoration.underline,
+                    ),
                   ),
                   child: const Text("Create Account"),
                 ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
 import '../database/database_helper.dart';
 
 class SignupPage extends StatefulWidget {
@@ -18,35 +19,47 @@ class _SignupPageState extends State<SignupPage> {
 
   final _formKey = GlobalKey<FormState>();
 
-  void _submit() async {
-    if (_formKey.currentState!.validate()) {
-      final userData = {
-        'name': _nameController.text,
-        'email': _emailController.text,
-        'password': _passwordController.text,
-        'age': int.parse(_ageController.text),
-        'height': double.parse(_heightController.text),
-        'weight': double.parse(_weightController.text),
-      };
+  Future<void> _submit() async {
+    if (!_formKey.currentState!.validate()) return;
 
-      try {
-        final db = DatabaseHelper();
-        await db.insertUser(userData);
+    // Safe parsing
+    int? _tryInt(String s) => s.trim().isEmpty ? null : int.tryParse(s.trim());
+    double? _tryDouble(String s) => s.trim().isEmpty ? null : double.tryParse(s.trim());
 
-        // Show success message and navigate back to login
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Account created successfully!')),
-          );
-          Navigator.pop(context, userData); // Pass userData back to login page
-        }
-      } catch (e) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error creating account: $e')),
-          );
-        }
-      }
+    final userData = <String, dynamic>{
+      'name'   : _nameController.text.trim(),
+      'email'  : _emailController.text.trim(),
+      'password': _passwordController.text, // store hashed in real apps
+      'age'    : _tryInt(_ageController.text),
+      'height' : _tryDouble(_heightController.text),
+      'weight' : _tryDouble(_weightController.text),
+    };
+
+    try {
+      final db = DatabaseHelper();
+      await db.insertUser(userData);
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Account created successfully!')),
+      );
+      // Return the created map to Login so it can pass through to Navigation/Account
+      Navigator.pop(context, userData);
+    } on DatabaseException catch (e) {
+      if (!mounted) return;
+      final isDuplicate = e.isUniqueConstraintError();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(isDuplicate
+              ? 'An account with this email already exists.'
+              : 'Database error: ${e.toString()}'),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error creating account: $e')),
+      );
     }
   }
 
@@ -64,37 +77,45 @@ class _SignupPageState extends State<SignupPage> {
           key: _formKey,
           child: Column(
             children: [
-              _buildTextField(_nameController, 'Name'),
+              _field(_nameController, 'Name'),
               const SizedBox(height: 16),
-              _buildTextField(
-                _emailController,
-                'Email',
-                keyboardType: TextInputType.emailAddress,
-              ),
+              _field(_emailController, 'Email',
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (v) {
+                    final s = v?.trim() ?? '';
+                    if (s.isEmpty) return 'Please enter Email';
+                    final ok = RegExp(r'^\S+@\S+\.\S+$').hasMatch(s);
+                    return ok ? null : 'Enter a valid email';
+                  }),
               const SizedBox(height: 16),
-              _buildTextField(
-                _passwordController,
-                'Password',
-                obscureText: true,
-              ),
+              _field(_passwordController, 'Password',
+                  obscureText: true,
+                  validator: (v) =>
+                      (v == null || v.isEmpty) ? 'Please enter Password' : null),
               const SizedBox(height: 16),
-              _buildTextField(
-                _ageController,
-                'Age',
-                keyboardType: TextInputType.number,
-              ),
+              _field(_ageController, 'Age',
+                  keyboardType: TextInputType.number,
+                  validator: (v) {
+                    final s = v?.trim() ?? '';
+                    if (s.isEmpty) return null; // optional
+                    return int.tryParse(s) == null ? 'Enter a valid number' : null;
+                  }),
               const SizedBox(height: 16),
-              _buildTextField(
-                _heightController,
-                'Height (cm)',
-                keyboardType: TextInputType.number,
-              ),
+              _field(_heightController, 'Height (cm)',
+                  keyboardType: TextInputType.number,
+                  validator: (v) {
+                    final s = v?.trim() ?? '';
+                    if (s.isEmpty) return null; // optional
+                    return double.tryParse(s) == null ? 'Enter a valid number' : null;
+                  }),
               const SizedBox(height: 16),
-              _buildTextField(
-                _weightController,
-                'Weight (kg)',
-                keyboardType: TextInputType.number,
-              ),
+              _field(_weightController, 'Weight (kg)',
+                  keyboardType: TextInputType.number,
+                  validator: (v) {
+                    final s = v?.trim() ?? '';
+                    if (s.isEmpty) return null; // optional
+                    return double.tryParse(s) == null ? 'Enter a valid number' : null;
+                  }),
               const SizedBox(height: 32),
               ElevatedButton(
                 onPressed: _submit,
@@ -114,26 +135,26 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 
-  Widget _buildTextField(
-    TextEditingController controller,
+  Widget _field(
+    TextEditingController c,
     String label, {
     bool obscureText = false,
     TextInputType keyboardType = TextInputType.text,
+    String? Function(String?)? validator,
   }) {
     return TextFormField(
-      controller: controller,
+      controller: c,
       obscureText: obscureText,
       keyboardType: keyboardType,
-      validator: (value) =>
-          (value == null || value.isEmpty) ? 'Please enter $label' : null,
+      validator: validator ?? (v) {
+        return (v == null || v.trim().isEmpty) ? 'Please enter $label' : null;
+      },
       decoration: InputDecoration(
         labelText: label,
         labelStyle: const TextStyle(color: Colors.black),
         filled: true,
         fillColor: Colors.white,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       ),
       style: const TextStyle(color: Colors.black),
     );
