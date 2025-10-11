@@ -62,30 +62,30 @@ class AccountPage extends StatelessWidget {
 
             const SizedBox(height: 16),
 
-            // ---------- Optional: Debug raw map viewer (helps see real keys) ----------
-            if (userData.isNotEmpty)
-              ExpansionTile(
-                initiallyExpanded: false,
-                title: const Text('Debug: raw user data',
-                    style: TextStyle(fontWeight: FontWeight.w600)),
-                children: [
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(12),
-                    margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.black12),
-                    ),
-                    child: Text(
-                      userData.toString(),
-                      style: const TextStyle(fontFamily: 'monospace'),
-                    ),
-                  )
-                ],
-              ),
-            // -------------------------------------------------------------------------
+            // // ---------- Optional: Debug raw map viewer (helps see real keys) ----------
+            // if (userData.isNotEmpty)
+            //   ExpansionTile(
+            //     initiallyExpanded: false,
+            //     title: const Text('Debug: raw user data',
+            //         style: TextStyle(fontWeight: FontWeight.w600)),
+            //     children: [
+            //       Container(
+            //         width: double.infinity,
+            //         padding: const EdgeInsets.all(12),
+            //         margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            //         decoration: BoxDecoration(
+            //           color: Colors.white,
+            //           borderRadius: BorderRadius.circular(8),
+            //           border: Border.all(color: Colors.black12),
+            //         ),
+            //         child: Text(
+            //           userData.toString(),
+            //           style: const TextStyle(fontFamily: 'monospace'),
+            //         ),
+            //       )
+            //     ],
+            //   ),
+            // // -------------------------------------------------------------------------
 
             const SizedBox(height: 8),
             Center(
