@@ -1,4 +1,4 @@
-// Sleep stage line chart 
+// Sleep stage line chart (X and Y swapped)
 
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -32,10 +32,10 @@ class LineChartWidget extends StatelessWidget {
               ),
             ),
             titlesData: FlTitlesData(
-              leftTitles: AxisTitles(
+              bottomTitles: AxisTitles(
                 sideTitles: SideTitles(
                   showTitles: true,
-                  reservedSize: 50,
+                  reservedSize: 40,
                   interval: 1,
                   getTitlesWidget: (value, meta) {
                     int index = value.toInt();
@@ -47,10 +47,10 @@ class LineChartWidget extends StatelessWidget {
                   },
                 ),
               ),
-              bottomTitles: AxisTitles(
+              leftTitles: AxisTitles(
                 sideTitles: SideTitles(
                   showTitles: true,
-                  reservedSize: 40,
+                  reservedSize: 50,
                   interval: 60,
                   getTitlesWidget: (value, meta) {
                     int hours = value ~/ 60;
@@ -66,13 +66,14 @@ class LineChartWidget extends StatelessWidget {
             ),
             borderData: FlBorderData(show: false),
             minX: 0,
-            maxX: maxDuration,
+            maxX: (durationsInMinutes.length - 1).toDouble(),
             minY: 0,
-            maxY: (durationsInMinutes.length - 1).toDouble(),
+            maxY: maxDuration,
             lineBarsData: [
               LineChartBarData(
-                spots: List.generate(durationsInMinutes.length, (index) => 
-                  FlSpot(durationsInMinutes[index].toDouble(), index.toDouble())),
+                // Swap X and Y values
+                spots: List.generate(durationsInMinutes.length, (index) =>
+                    FlSpot(index.toDouble(), durationsInMinutes[index].toDouble())),
                 isCurved: true,
                 color: Colors.white,
                 barWidth: 3,
