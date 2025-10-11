@@ -17,7 +17,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => SleepDataProvider()),
-        ChangeNotifierProvider(create: (_) => SessionProvider()), // ✅ holds logged-in user
+        ChangeNotifierProvider(create: (_) => SessionProvider()), // holds logged-in user
       ],
       child: const MyApp(),
     ),
