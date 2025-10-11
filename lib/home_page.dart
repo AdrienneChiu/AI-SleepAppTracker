@@ -1,9 +1,8 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:provider/provider.dart';
 import 'providers/sleep_data_provider.dart';
-import 'models/sleep_stage_result.dart';
+
 
 class SleepPieChart extends StatelessWidget {
   final List<double> values;
@@ -80,11 +79,11 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.all(16.0),
           children: [
             // DEBUG PURPOSE: DELETE LATER
-            Text(
-              'Nights saved: ${provider.results.length}',
-              style: const TextStyle(color: Colors.white),
-            ),
-            const SizedBox(height: 8),
+            // Text(
+            //   'Nights saved: ${provider.results.length}',
+            //   style: const TextStyle(color: Colors.white),
+            // ),
+            // const SizedBox(height: 8),
 
             // Summary
             Container(
@@ -117,6 +116,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   const SizedBox(height: 12),
+                  // DELETE LATER: DEBUGGING PURPOSES
                   ElevatedButton(
                     onPressed: () => Navigator.of(context).pushNamed('/predict'),
                     child: const Text('Open Predictor'),

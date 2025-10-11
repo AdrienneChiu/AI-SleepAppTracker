@@ -1,0 +1,12 @@
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  test('Load TFLite model', () async {
+    final data = await rootBundle.load('assets/models/attnsleep_fp16.tflite');
+    print('✅ Loaded asset successfully, bytes=${data.lengthInBytes}');
+    expect(data.lengthInBytes, greaterThan(0));
+  });
+}
