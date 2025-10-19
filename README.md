@@ -1,8 +1,64 @@
-# Final Year Project
+# Final Year Project at AUT, 2025.
+A project on AI-Driven Mobile Application for EEG-Based Sleep Stage Classification
 
-A new Flutter project on AI-Driven Mobile Application for Sleep Stage Classification Using Multimodal Data.
+>Research Question - How can a mobile application be developed to classify sleep stages using optimised deep learning models, visualise results in real time, and provide user-friendly sleep insights within the computational constraints of mobile devices?
 
-Final Year Project at AUT, 2025.
+<br>
 
-Research Question - How can a mobile application be developed to classify sleep stages using optimised deep learning models, visualise results in real time, and provide user-friendly sleep insights within the computational constraints of mobile devices?
+# 💤About SleepApp - AI-Driven Sleep Monitoring & Insights
+SleepApp is a Flutter-based mobile application that simulates and visualizes nightly sleep patterns using an AI-powered model inspired by AttnSleep. The app provides an interactive dashboard showing stage-by-stage sleep data, synthetic trends, and personalized sleep quality scores. SleepApp demonstrates how mobile AI and data visualization can be integrated for personalized health tracking.
 
+### Key Features
+- 🧠 AI Model Integration: Uses a TensorFlow Lite version of AttnSleep for automated sleep-stage prediction from EEG-like data.
+- 📊 Data Visualization: Real-time pie and line charts display stage distributions (Awake, N1, N2, N3, REM).
+- 🧮 Sleep Quality Scoring: Calculates a weighted sleep score based on stage composition.
+- 🧍‍♀️ User Accounts: Secure local user registration and login with SQLite persistence.
+- 📅 Synthetic Data Generator: Generates realistic dummy sleep data for testing and analytics.
+- 📱 Responsive Flutter UI: Modern Material 3 design with navigation bar and multi-page layout (Home, Insights, Info, Account).
+
+### Tech Stack
+- Framework: Flutter
+- Programming Language: Dart
+- IDE: Visual Studio Code
+- Database: SQLite
+- Model Integration: TensorFlow Lite
+
+<br>
+
+# 📦 Installation
+### Prerequisites
+
+- Download [Flutter SDK](https://docs.flutter.dev/get-started/install)  
+
+- Xcode installed (for iOS Simulator)  
+
+- iOS Simulator configured (e.g., iPhone 16 Pro)  
+  
+### Steps
+
+1. Clone the repository on your chosen IDE
+
+  ```git clone https://github.com/AdrienneChiu/AI-SleepAppTracker.git```  
+
+
+2. Install dependencies
+
+```flutter pub get```
+
+
+3. Run the app on Xcode iOS Simulator
+
+```flutter run```
+
+
+- Select your desired iOS device in the simulator (e.g., iPhone 16 Pro).  
+- For Android testing, run on an Android Emulator via Android Studio (e.g., Google Pixel 6)
+
+  Note: Check Flutter setup - Run ```flutter doctor``` to verify Flutter, Xcode, and simulator configurations. This command highlights missing dependencies or version issues.
+
+<br>
+
+  # 👩‍💻 Author
+
+Developed by Adrienne Chiu as part of the ENSE891 & ENSE892 Industrial Capstone Project at Auckland University of Technology (AUT), 2025.\
+Supervised by Anuradha Singh.
