@@ -26,6 +26,8 @@ SleepApp is a Flutter-based mobile application that simulates and visualizes nig
 <br>
 
 # 📦 Installation
+### Prerequisites
+1. Download Flutter
 
 ### Steps
 
