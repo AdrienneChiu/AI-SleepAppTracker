@@ -36,4 +36,5 @@ SleepApp is a Flutter-based mobile application that simulates and visualizes nig
 
   # 👩‍💻 Author
 
-Developed by Adrienne Chiu as part of the ENSE891 & ENSE892 Industrial Capstone Project at Auckland University of Technology (AUT), 2025.
+Developed by Adrienne Chiu as part of the ENSE891 & ENSE892 Industrial Capstone Project at Auckland University of Technology (AUT), 2025.\
+Please credit the author if reusing or modifying this work.
