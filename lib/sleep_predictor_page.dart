@@ -7,7 +7,7 @@ import 'attnsleep.dart'; // your model runner
 import 'models/sleep_stage_result.dart';
 import 'providers/sleep_data_provider.dart';
 import 'utils/aggregator.dart';
-import 'utils/label_map.dart';
+import 'utils/label_map.dart'; // map model label "W" -> "Awake"
 
 class SleepPredictorPage extends StatefulWidget {
   const SleepPredictorPage({super.key});
@@ -17,12 +17,12 @@ class SleepPredictorPage extends StatefulWidget {
 }
 
 class _SleepPredictorPageState extends State<SleepPredictorPage> {
-  final AttnSleep _runner = AttnSleep();
+  final AttnSleep _runner = AttnSleep(); // your AttnSleep class
   bool _modelLoaded = false;
   bool _running = false;
   double _progress = 0.0;
   List<double> _lastProbs = [];
-  String? _lastLabel;
+  String? _lastLabel; // display label ("Awake","N1","N2","N3","REM")
 
   @override
   void initState() {
@@ -32,7 +32,7 @@ class _SleepPredictorPageState extends State<SleepPredictorPage> {
 
   Future<void> _initModel() async {
     try {
-      await _runner.load();
+      await _runner.load(); // ensure your AttnSleep has load()
       setState(() => _modelLoaded = true);
     } catch (e) {
       setState(() => _modelLoaded = false);
@@ -42,8 +42,13 @@ class _SleepPredictorPageState extends State<SleepPredictorPage> {
     }
   }
 
-  Future<void> _runNight() async {
-    if (!_modelLoaded) return;
+  /// Runs a full-night inference over real EEG if available, else dummy
+  Future<void> _runFullNightPrediction({int epochs = 480}) async {
+    if (!_modelLoaded) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Model not loaded')));
+      return;
+    }
 
     setState(() {
       _running = true;
@@ -52,55 +57,58 @@ class _SleepPredictorPageState extends State<SleepPredictorPage> {
       _lastLabel = null;
     });
 
-    final preds = <int>[];
     final provider = Provider.of<SleepDataProvider>(context, listen: false);
-    Float32List eegData;
+    final preds = <int>[]; // collect model indices 0..4
 
-    // 1️⃣ Try to use real EEG
-    try {
-      eegData = provider.currentEEG;
-      if (eegData.isEmpty) throw Exception('EEG data empty');
-    } catch (_) {
-      // 2️⃣ Fallback to dummy data
-      debugPrint('[SleepPredictorPage] Using dummy EEG data');
-      eegData = Float32List.fromList(
-        List<double>.generate(_runner.windowLength * 480, (_) => math.Random().nextDouble()),
-      );
-    }
+    for (int e = 0; e < epochs; e++) {
+      Float32List eegData;
 
-    // Split EEG into windows
-    final totalWindows = (eegData.length / _runner.windowLength).ceil();
+      // Try to get real EEG from provider
+      if (provider.currentEEG != null &&
+          provider.currentEEG!.length >= _runner.windowLength) {
+        eegData = provider.currentEEG!;
+      } else {
+        // fallback dummy
+        eegData = Float32List.fromList(
+          List<double>.generate(_runner.windowLength, (_) => math.Random().nextDouble()),
+        );
+      }
 
-    for (int w = 0; w < totalWindows; w++) {
-      final start = w * _runner.windowLength;
-      final end = ((w + 1) * _runner.windowLength).clamp(0, eegData.length);
-      final window = eegData.sublist(start, end);
+      // AttnSleep.predict returns (label, idx, probs)
+      final res = _runner.predict(eegData);
+      final int idx = res.$2;           // 0..4
+      final List<double> probs = res.$3; // probabilities per stage
 
-      // Pad if last window is short
-      final windowData = window.length < _runner.windowLength
-          ? Float32List.fromList([...window, ...List.filled(_runner.windowLength - window.length, 0.0)])
-          : Float32List.fromList(window);
+      preds.add(idx);
 
-      final res = _runner.predict(windowData);
-      preds.add(res.$2);
-
-      if (w % 5 == 0) {
+      // update last display every N steps to keep UI responsive
+      if (e % 10 == 0) {
         setState(() {
-          _progress = (w + 1) / totalWindows;
-          _lastProbs = res.$3;
-          _lastLabel = LabelMap.toDisplay(res.$1);
+          _progress = (e + 1) / epochs;
+          _lastProbs = probs;
+          _lastLabel = LabelMap.toDisplay(res.$1); // "W" -> "Awake"
         });
         await Future.delayed(Duration.zero);
       }
     }
 
-    final durations = aggregateSleepStages(preds);
-    final result = SleepStageResult(timestamp: DateTime.now(), stageDurations: durations);
+    // Final progress
+    setState(() {
+      _progress = 1.0;
+    });
+
+    // Aggregate indices into minutes per stage
+    final durations = aggregateSleepStages(preds); // -> {"Awake": x, "N1":..., "REM":...}
+
+    // Store result in provider
+    final result = SleepStageResult(
+      timestamp: DateTime.now(),
+      stageDurations: durations,
+    );
     provider.addResult(result);
 
     setState(() {
       _running = false;
-      _progress = 1.0;
     });
 
     ScaffoldMessenger.of(context)
@@ -122,7 +130,7 @@ class _SleepPredictorPageState extends State<SleepPredictorPage> {
               const Text('Loading model...', style: TextStyle(color: Colors.white)),
             if (_modelLoaded && !_running)
               ElevatedButton(
-                onPressed: _runNight,
+                onPressed: () => _runFullNightPrediction(epochs: 480),
                 child: const Text('Run Full-Night Prediction'),
               ),
             if (_running) ...[
@@ -145,7 +153,7 @@ class _SleepPredictorPageState extends State<SleepPredictorPage> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: List.generate(_lastProbs.length, (i) {
-                  final display = LabelMap.toDisplay(modelLabels[i]);
+                  final display = LabelMap.toDisplay(modelLabels[i]); // "W" -> "Awake"
                   return Text(
                     '$display: ${(_lastProbs[i] * 100).toStringAsFixed(1)}%',
                     style: const TextStyle(color: Colors.white),
@@ -158,8 +166,6 @@ class _SleepPredictorPageState extends State<SleepPredictorPage> {
     );
   }
 }
-
-
 
 
 // // lib/sleep_predictor_page.dart

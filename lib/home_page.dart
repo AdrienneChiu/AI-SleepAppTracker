@@ -115,12 +115,12 @@ class _HomePageState extends State<HomePage> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 10),
                   // DELETE LATER: DEBUGGING PURPOSES
-                  ElevatedButton(
-                    onPressed: () => Navigator.of(context).pushNamed('/predict'),
-                    child: const Text('Open Predictor'),
-                  ),
+                  // ElevatedButton(
+                  //   onPressed: () => Navigator.of(context).pushNamed('/predict'),
+                  //   child: const Text('Open Predictor'),
+                  // ),
 
                   // DEBUG helpers (remove when satisfied)
                   const SizedBox(height: 8),
