@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-// Your pages
 import 'home_page.dart';
 import 'Insights Page/insights_page.dart';
 import 'Info Page/info_page.dart';
 import 'account_page.dart';
 
-// Providers
+
 import 'providers/sleep_data_provider.dart';
 import 'providers/session_provider.dart';
 
-// Models + utils
+
 import 'models/sleep_stage_result.dart';
 import 'utils/synthetic_sleep.dart';
 
@@ -23,7 +22,7 @@ class NavigationExample extends StatefulWidget {
 }
 
 class _NavigationExampleState extends State<NavigationExample> {
-  int currentPageIndex = 1; // default = HomePage
+  int currentPageIndex = 1; 
   late final List<Widget> pages;
 
   @override
@@ -36,11 +35,11 @@ class _NavigationExampleState extends State<NavigationExample> {
       InfoPage(),
     ];
 
-    // Seed several weeks of fake nights only once (when no data exists yet).
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final p = Provider.of<SleepDataProvider>(context, listen: false);
       if (p.results.isEmpty) {
-        _seedPastNights(p, days: 42); // ~6 weeks; adjust as needed
+        _seedPastNights(p, days: 42); 
       }
     });
   }

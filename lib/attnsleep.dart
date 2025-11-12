@@ -7,15 +7,13 @@ import 'package:tflite_flutter/tflite_flutter.dart';
 class AttnSleep {
   AttnSleep({this.windowLength = 3000});
 
-  /// Window length for model input
   int windowLength;
 
   late final Interpreter _interpreter;
 
-  /// Model stage labels
   static const labels = ["W", "N1", "N2", "N3", "REM"];
 
-  /// Load the model from assets
+
   Future<void> load() async {
     try {
       final data = await rootBundle.load('assets/models/attnsleep_fp16.tflite');
@@ -56,7 +54,7 @@ class AttnSleep {
     return exps.map((e) => e / sum).toList();
   }
 
-  /// Predict a single window
+
   (String, int, List<double>) predict(Float32List eegWindow) {
     if (eegWindow.length != windowLength) {
       throw ArgumentError('Expected window length $windowLength, got ${eegWindow.length}');
@@ -92,7 +90,7 @@ class AttnSleep {
     return (labels[bestIdx], bestIdx, probs);
   }
 
-  /// New: Predict full EEG recording
+  // Predict full EEG recording
   List<(String, int, List<double>)> predictFullEEG(Float32List eegData, {Function(int)? onProgress}) {
     final predictions = <(String, int, List<double>)>[];
     final totalWindows = (eegData.length / windowLength).ceil();

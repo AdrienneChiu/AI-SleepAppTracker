@@ -3,11 +3,11 @@ import 'dart:typed_data';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'attnsleep.dart'; // your model runner
+import 'attnsleep.dart'; 
 import 'models/sleep_stage_result.dart';
 import 'providers/sleep_data_provider.dart';
 import 'utils/aggregator.dart';
-import 'utils/label_map.dart'; // map model label "W" -> "Awake"
+import 'utils/label_map.dart'; 
 
 class SleepPredictorPage extends StatefulWidget {
   const SleepPredictorPage({super.key});
@@ -17,12 +17,12 @@ class SleepPredictorPage extends StatefulWidget {
 }
 
 class _SleepPredictorPageState extends State<SleepPredictorPage> {
-  final AttnSleep _runner = AttnSleep(); // your AttnSleep class
+  final AttnSleep _runner = AttnSleep(); 
   bool _modelLoaded = false;
   bool _running = false;
   double _progress = 0.0;
   List<double> _lastProbs = [];
-  String? _lastLabel; // display label ("Awake","N1","N2","N3","REM")
+  String? _lastLabel; 
 
   @override
   void initState() {
@@ -32,7 +32,7 @@ class _SleepPredictorPageState extends State<SleepPredictorPage> {
 
   Future<void> _initModel() async {
     try {
-      await _runner.load(); // ensure your AttnSleep has load()
+      await _runner.load(); 
       setState(() => _modelLoaded = true);
     } catch (e) {
       setState(() => _modelLoaded = false);
@@ -42,7 +42,7 @@ class _SleepPredictorPageState extends State<SleepPredictorPage> {
     }
   }
 
-  /// Runs a full-night inference over real EEG if available, else dummy
+
   Future<void> _runFullNightPrediction({int epochs = 480}) async {
     if (!_modelLoaded) {
       ScaffoldMessenger.of(context)
@@ -74,14 +74,14 @@ class _SleepPredictorPageState extends State<SleepPredictorPage> {
         );
       }
 
-      // AttnSleep.predict returns (label, idx, probs)
+
       final res = _runner.predict(eegData);
       final int idx = res.$2;           // 0..4
       final List<double> probs = res.$3; // probabilities per stage
 
       preds.add(idx);
 
-      // update last display every N steps to keep UI responsive
+
       if (e % 10 == 0) {
         setState(() {
           _progress = (e + 1) / epochs;
@@ -153,7 +153,7 @@ class _SleepPredictorPageState extends State<SleepPredictorPage> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: List.generate(_lastProbs.length, (i) {
-                  final display = LabelMap.toDisplay(modelLabels[i]); // "W" -> "Awake"
+                  final display = LabelMap.toDisplay(modelLabels[i]); 
                   return Text(
                     '$display: ${(_lastProbs[i] * 100).toStringAsFixed(1)}%',
                     style: const TextStyle(color: Colors.white),
