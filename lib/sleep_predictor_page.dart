@@ -1,3 +1,4 @@
+// Author: Adrienne Chiu (2025)
 // lib/sleep_predictor_page.dart
 import 'dart:typed_data';
 import 'dart:math' as math;
@@ -58,17 +59,15 @@ class _SleepPredictorPageState extends State<SleepPredictorPage> {
     });
 
     final provider = Provider.of<SleepDataProvider>(context, listen: false);
-    final preds = <int>[]; // collect model indices 0..4
+    final preds = <int>[]; 
 
     for (int e = 0; e < epochs; e++) {
       Float32List eegData;
 
-      // Try to get real EEG from provider
       if (provider.currentEEG != null &&
           provider.currentEEG!.length >= _runner.windowLength) {
         eegData = provider.currentEEG!;
       } else {
-        // fallback dummy
         eegData = Float32List.fromList(
           List<double>.generate(_runner.windowLength, (_) => math.Random().nextDouble()),
         );
@@ -86,7 +85,7 @@ class _SleepPredictorPageState extends State<SleepPredictorPage> {
         setState(() {
           _progress = (e + 1) / epochs;
           _lastProbs = probs;
-          _lastLabel = LabelMap.toDisplay(res.$1); // "W" -> "Awake"
+          _lastLabel = LabelMap.toDisplay(res.$1); 
         });
         await Future.delayed(Duration.zero);
       }
@@ -98,7 +97,7 @@ class _SleepPredictorPageState extends State<SleepPredictorPage> {
     });
 
     // Aggregate indices into minutes per stage
-    final durations = aggregateSleepStages(preds); // -> {"Awake": x, "N1":..., "REM":...}
+    final durations = aggregateSleepStages(preds);
 
     // Store result in provider
     final result = SleepStageResult(

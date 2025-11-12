@@ -1,3 +1,5 @@
+// Author: Adrienne Chiu (2025)
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

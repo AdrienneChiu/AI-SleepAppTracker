@@ -1,3 +1,4 @@
+// Author: Adrienne Chiu (2025)
 // Date/week selector widget
 
 import 'package:flutter/material.dart';

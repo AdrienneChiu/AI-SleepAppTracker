@@ -1,11 +1,13 @@
+// Author: Adrienne Chiu (2025)
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-// Providers
+
 import 'providers/sleep_data_provider.dart';
 import 'providers/session_provider.dart';
 
-// Screens
+
 import 'login_page/login_page.dart';
 import 'navigation.dart';
 import 'sleep_predictor_page.dart';
@@ -17,7 +19,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => SleepDataProvider()),
-        ChangeNotifierProvider(create: (_) => SessionProvider()), // holds logged-in user
+        ChangeNotifierProvider(create: (_) => SessionProvider()), 
       ],
       child: const MyApp(),
     ),
@@ -48,3 +50,14 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+// Author: Adrienne Chiu (2025)

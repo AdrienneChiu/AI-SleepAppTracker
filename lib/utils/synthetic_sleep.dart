@@ -1,3 +1,4 @@
+// Author: Adrienne Chiu (2025)
 import 'dart:math';
 
 /// Generates a realistic minutes-per-stage map that sums to ~7–9 hours.

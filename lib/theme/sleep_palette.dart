@@ -1,3 +1,4 @@
+// Author: Adrienne Chiu (2025)
 import 'package:flutter/material.dart';
 
 /// Canonical display order used across all charts & boxes.

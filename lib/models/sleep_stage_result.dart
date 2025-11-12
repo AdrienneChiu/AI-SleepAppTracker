@@ -1,3 +1,4 @@
+// Author: Adrienne Chiu (2025)
 
 class SleepStageResult {
   final DateTime timestamp;

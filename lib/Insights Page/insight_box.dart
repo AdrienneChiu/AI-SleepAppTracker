@@ -1,3 +1,5 @@
+// Author: Adrienne Chiu (2025)
+
 // Colourful box widget used for the sleep stage insights display
 
 import 'package:flutter/material.dart';

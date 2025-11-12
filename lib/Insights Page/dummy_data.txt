@@ -1,5 +1,6 @@
-// // Dummy sleep data for insights line chart
-// //import 'package:flutter/material.dart';
+// Author: Adrienne Chiu (2025)
+//  Dummy sleep data for insights line chart
+// import 'package:flutter/material.dart';
 
 // final Map<DateTime, Map<String, double>> dummySleepData = {
 //   // June sample data

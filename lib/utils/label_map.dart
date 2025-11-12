@@ -1,4 +1,5 @@
-/// Map model labels to display labels used in the UI/provider.
+// Author: Adrienne Chiu (2025)
+// Map model labels to display labels used in the UI/provider.
 class LabelMap {
   static const Map<String, String> modelToDisplay = {
     "W": "Awake",

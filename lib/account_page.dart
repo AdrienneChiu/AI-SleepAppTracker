@@ -1,3 +1,5 @@
+// Author: Adrienne Chiu (2025)
+
 import 'package:flutter/material.dart';
 import 'login_page/login_page.dart';
 
@@ -6,7 +8,6 @@ class AccountPage extends StatelessWidget {
 
   const AccountPage({super.key, required this.userData});
 
-  // Helper: first non-empty value among possible keys
   String _firstNonEmpty(List<String> keys) {
     for (final k in keys) {
       final v = userData[k];
@@ -17,7 +18,6 @@ class AccountPage extends StatelessWidget {
     return '';
   }
 
-  // Build display name from common patterns
   String get _displayName {
     final name = _firstNonEmpty(['name', 'fullName', 'full_name', 'username']);
     if (name.isNotEmpty) return name;
@@ -37,9 +37,6 @@ class AccountPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // quick console check so we can see incoming keys if still blank
-    // (harmless in production; remove later if you like)
-    // ignore: avoid_print
     debugPrint('AccountPage userData keys: ${userData.keys.toList()}');
 
     return Scaffold(
@@ -61,31 +58,6 @@ class AccountPage extends StatelessWidget {
             _buildInfoCard(Icons.monitor_weight, 'Weight (kg)', _weight),
 
             const SizedBox(height: 16),
-
-            // // ---------- Optional: Debug raw map viewer (helps see real keys) ----------
-            // if (userData.isNotEmpty)
-            //   ExpansionTile(
-            //     initiallyExpanded: false,
-            //     title: const Text('Debug: raw user data',
-            //         style: TextStyle(fontWeight: FontWeight.w600)),
-            //     children: [
-            //       Container(
-            //         width: double.infinity,
-            //         padding: const EdgeInsets.all(12),
-            //         margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-            //         decoration: BoxDecoration(
-            //           color: Colors.white,
-            //           borderRadius: BorderRadius.circular(8),
-            //           border: Border.all(color: Colors.black12),
-            //         ),
-            //         child: Text(
-            //           userData.toString(),
-            //           style: const TextStyle(fontFamily: 'monospace'),
-            //         ),
-            //       )
-            //     ],
-            //   ),
-            // // -------------------------------------------------------------------------
 
             const SizedBox(height: 8),
             Center(

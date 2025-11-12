@@ -1,4 +1,5 @@
-/// Converts a list of predicted stage indexes (0..4) into minutes per stage.
+// Author: Adrienne Chiu (2025)
+// Converts a list of predicted stage indexes (0..4) into minutes per stage.
 import '../theme/sleep_palette.dart';
 
 Map<String, double> aggregateSleepStages(

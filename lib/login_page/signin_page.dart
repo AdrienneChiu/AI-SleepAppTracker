@@ -1,3 +1,5 @@
+// Author: Adrienne Chiu (2025)
+
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import '../database/database_helper.dart';

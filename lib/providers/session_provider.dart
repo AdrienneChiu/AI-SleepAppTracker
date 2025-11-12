@@ -1,3 +1,5 @@
+// Author: Adrienne Chiu (2025)
+
 import 'package:flutter/foundation.dart';
 
 class SessionProvider extends ChangeNotifier {

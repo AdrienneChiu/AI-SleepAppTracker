@@ -1,3 +1,5 @@
+// Author: Adrienne Chiu (2025)
+
 // Main Insights UI Page
 import 'package:ai_sleepapp/providers/sleep_data_provider.dart';
 import 'package:flutter/material.dart';

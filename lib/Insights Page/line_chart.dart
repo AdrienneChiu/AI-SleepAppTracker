@@ -1,3 +1,5 @@
+// Author: Adrienne Chiu (2025)
+
 // Sleep stage line chart (X and Y swapped)
 
 import 'package:flutter/material.dart';
