@@ -10,11 +10,11 @@ class SleepPieChart extends StatelessWidget {
   const SleepPieChart({super.key, required this.values});
 
   final List<Color> sliceColors = const [
-    Color(0xFFF1A5BE), // Awake
-    Color(0xFFA78EEB), // N1
-    Color(0xFF4CAF50), // N2
-    Color(0xFF5F9FE7), // N3
-    Color(0xFFD1B043), // REM
+    Color(0xFFF1A5BE), 
+    Color(0xFFA78EEB), 
+    Color(0xFF4CAF50), 
+    Color(0xFF5F9FE7), 
+    Color(0xFFD1B043), 
   ];
 
   @override
@@ -47,10 +47,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<double> defaultStageValues = const [30, 20, 25, 15, 10]; // Awake,N1,N2,N3,REM
+  final List<double> defaultStageValues = const [30, 20, 25, 15, 10]; 
 
   double calculateSleepScore(List<double> minutesValues) {
-    const weights = [0, 0.5, 0.75, 1.0, 1.0]; // Awake..REM
+    const weights = [0, 0.5, 0.75, 1.0, 1.0]; 
     double weightedSum = 0, total = 0;
     for (int i = 0; i < minutesValues.length; i++) {
       weightedSum += minutesValues[i] * weights[i];
