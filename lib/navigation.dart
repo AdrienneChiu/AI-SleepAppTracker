@@ -45,7 +45,7 @@ class _NavigationExampleState extends State<NavigationExample> {
     });
   }
 
-  void _seedPastNights(SleepDataProvider p, {int days = 42}) {
+  void _seedPastNights(SleepDataProvider p, {int days = 90}) {
     final now = DateTime.now();
     // Seed oldest -> newest so provider.latest is the most recent day
     for (int i = days; i >= 1; i--) {
