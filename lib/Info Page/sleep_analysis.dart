@@ -1,3 +1,5 @@
+//Sleep_analysis.dart
+
 // Author: Adrienne Chiu (2025)
 import 'package:flutter/material.dart';
 
@@ -8,12 +10,14 @@ class SleepAnalysisInterpretationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        // title: const Text('Sleep Analysis Interpretation'),
       ),
-      body: SingleChildScrollView(  
+      body: SingleChildScrollView(  // Add scroll so content doesn’t overflow
         padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            // Section Header: Analysis
             const Center(
               child: Text(
                 " Sleep Analysis",
@@ -26,6 +30,7 @@ class SleepAnalysisInterpretationPage extends StatelessWidget {
             ),
             const SizedBox(height: 8),
 
+            // Interpretation
             const Center(
               child: Text(
                 "Interpretation",
@@ -38,6 +43,7 @@ class SleepAnalysisInterpretationPage extends StatelessWidget {
             ),
             const SizedBox(height: 24),
 
+            // Good Sleep interpretation box
             Container(
               margin: const EdgeInsets.symmetric(vertical: 8.0),
               padding: const EdgeInsets.all(16),
@@ -71,7 +77,7 @@ class SleepAnalysisInterpretationPage extends StatelessWidget {
               ),
             ),
 
-
+            // Average Sleep interpretation box
             Container(
               margin: const EdgeInsets.symmetric(vertical: 8.0),
               padding: const EdgeInsets.all(16),
@@ -105,7 +111,7 @@ class SleepAnalysisInterpretationPage extends StatelessWidget {
               ),
             ),
 
-
+            // Bad Sleep interpretation box
             Container(
               margin: const EdgeInsets.symmetric(vertical: 8.0),
               padding: const EdgeInsets.all(16),
@@ -144,3 +150,4 @@ class SleepAnalysisInterpretationPage extends StatelessWidget {
     );
   }
 }
+
