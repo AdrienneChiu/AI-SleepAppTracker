@@ -1,4 +1,4 @@
-# Final Year Project at AUT, 2025.
+ReadMe sleep app# Final Year Project at AUT, 2025.
 A project on AI-Driven Mobile Application for EEG-Based Sleep Stage Classification
 
 >Research Question - How can a mobile application be developed to classify sleep stages using optimised deep learning models, visualise results in real time, and provide user-friendly sleep insights within the computational constraints of mobile devices?
@@ -27,16 +27,38 @@ SleepApp is a Flutter-based mobile application that simulates and visualizes nig
 
 # 📦 Installation
 ### Prerequisites
-1. Download Flutter
 
+- Download [Flutter SDK](https://docs.flutter.dev/get-started/install)  
+
+- Xcode installed (for iOS Simulator)  
+
+- iOS Simulator configured (e.g., iPhone 16 Pro)  
+  
 ### Steps
 
-1. Clone Repository
-2. Run the app
+1. Clone the repository on your chosen IDE
+
+  ```git clone https://github.com/AdrienneChiu/AI-SleepAppTracker.git```  
+
+
+2. Install dependencies
+
+```flutter pub get```
+
+
+3. Run the app on Xcode iOS Simulator
+
+```flutter run```
+
+
+- Select your desired iOS device in the simulator (e.g., iPhone 16 Pro).  
+- For Android testing, run on an Android Emulator via Android Studio (e.g., Google Pixel 6)
+
+  Note: Check Flutter setup - Run ```flutter doctor``` to verify Flutter, Xcode, and simulator configurations. This command highlights missing dependencies or version issues.
 
 <br>
 
   # 👩‍💻 Author
 
 Developed by Adrienne Chiu as part of the ENSE891 & ENSE892 Industrial Capstone Project at Auckland University of Technology (AUT), 2025.\
-Please credit the author if reusing or modifying this work.
+Supervised by Anuradha Singh.
