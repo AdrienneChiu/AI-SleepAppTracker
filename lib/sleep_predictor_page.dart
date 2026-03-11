@@ -1,14 +1,15 @@
-// Author: Adrienne Chiu (2025)
+//sleep_predictor_page.dart
+
 // lib/sleep_predictor_page.dart
 import 'dart:typed_data';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'attnsleep.dart'; 
+import 'attnsleep.dart'; // your model runner
 import 'models/sleep_stage_result.dart';
 import 'providers/sleep_data_provider.dart';
 import 'utils/aggregator.dart';
-import 'utils/label_map.dart'; 
+import 'utils/label_map.dart'; // map model label "W" -> "Awake"
 
 class SleepPredictorPage extends StatefulWidget {
   const SleepPredictorPage({super.key});
@@ -18,12 +19,12 @@ class SleepPredictorPage extends StatefulWidget {
 }
 
 class _SleepPredictorPageState extends State<SleepPredictorPage> {
-  final AttnSleep _runner = AttnSleep(); 
+  final AttnSleep _runner = AttnSleep(); // your AttnSleep class
   bool _modelLoaded = false;
   bool _running = false;
   double _progress = 0.0;
   List<double> _lastProbs = [];
-  String? _lastLabel; 
+  String? _lastLabel; // display label ("Awake","N1","N2","N3","REM")
 
   @override
   void initState() {
@@ -33,7 +34,7 @@ class _SleepPredictorPageState extends State<SleepPredictorPage> {
 
   Future<void> _initModel() async {
     try {
-      await _runner.load(); 
+      await _runner.load(); // ensure your AttnSleep has load()
       setState(() => _modelLoaded = true);
     } catch (e) {
       setState(() => _modelLoaded = false);
@@ -43,7 +44,7 @@ class _SleepPredictorPageState extends State<SleepPredictorPage> {
     }
   }
 
-
+  /// Runs a full-night inference over real EEG if available, else dummy
   Future<void> _runFullNightPrediction({int epochs = 480}) async {
     if (!_modelLoaded) {
       ScaffoldMessenger.of(context)
@@ -59,33 +60,35 @@ class _SleepPredictorPageState extends State<SleepPredictorPage> {
     });
 
     final provider = Provider.of<SleepDataProvider>(context, listen: false);
-    final preds = <int>[]; 
+    final preds = <int>[]; // collect model indices 0..4
 
     for (int e = 0; e < epochs; e++) {
       Float32List eegData;
 
+      // Try to get real EEG from provider
       if (provider.currentEEG != null &&
           provider.currentEEG!.length >= _runner.windowLength) {
         eegData = provider.currentEEG!;
       } else {
+        // fallback dummy
         eegData = Float32List.fromList(
           List<double>.generate(_runner.windowLength, (_) => math.Random().nextDouble()),
         );
       }
 
-
+      // AttnSleep.predict returns (label, idx, probs)
       final res = _runner.predict(eegData);
       final int idx = res.$2;           // 0..4
       final List<double> probs = res.$3; // probabilities per stage
 
       preds.add(idx);
 
-
+      // update last display every N steps to keep UI responsive
       if (e % 10 == 0) {
         setState(() {
           _progress = (e + 1) / epochs;
           _lastProbs = probs;
-          _lastLabel = LabelMap.toDisplay(res.$1); 
+          _lastLabel = LabelMap.toDisplay(res.$1); // "W" -> "Awake"
         });
         await Future.delayed(Duration.zero);
       }
@@ -97,7 +100,7 @@ class _SleepPredictorPageState extends State<SleepPredictorPage> {
     });
 
     // Aggregate indices into minutes per stage
-    final durations = aggregateSleepStages(preds);
+    final durations = aggregateSleepStages(preds); // -> {"Awake": x, "N1":..., "REM":...}
 
     // Store result in provider
     final result = SleepStageResult(
@@ -152,7 +155,7 @@ class _SleepPredictorPageState extends State<SleepPredictorPage> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: List.generate(_lastProbs.length, (i) {
-                  final display = LabelMap.toDisplay(modelLabels[i]); 
+                  final display = LabelMap.toDisplay(modelLabels[i]); // "W" -> "Awake"
                   return Text(
                     '$display: ${(_lastProbs[i] * 100).toStringAsFixed(1)}%',
                     style: const TextStyle(color: Colors.white),
@@ -328,3 +331,4 @@ class _SleepPredictorPageState extends State<SleepPredictorPage> {
 //     );
 //   }
 // }
+
