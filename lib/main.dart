@@ -1,4 +1,4 @@
-// Author: Adrienne Chiu (2025)
+Main.dart
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -50,14 +50,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-// Author: Adrienne Chiu (2025)

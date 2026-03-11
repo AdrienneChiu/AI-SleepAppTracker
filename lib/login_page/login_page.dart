@@ -34,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
       if (_passwordController.text == user['password']) {
         setState(() => _errorMessage = null);
 
-        // ✅ Save into SessionProvider
+        // Save into SessionProvider
         final session = Provider.of<SessionProvider>(context, listen: false);
         session.setUser(user);
 
