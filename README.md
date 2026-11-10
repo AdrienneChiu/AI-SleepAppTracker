@@ -5,16 +5,16 @@ A project on AI-Driven Mobile Application for EEG-Based Sleep Stage Classificati
 
 <br>
 
-# 💤About SleepApp - AI-Driven Sleep Monitoring & Insights
+# About SleepApp - AI-Driven Sleep Monitoring & Insights
 SleepApp is a Flutter-based mobile application that simulates and visualizes nightly sleep patterns using an AI-powered model inspired by AttnSleep. The app provides an interactive dashboard showing stage-by-stage sleep data, synthetic trends, and personalized sleep quality scores. SleepApp demonstrates how mobile AI and data visualization can be integrated for personalized health tracking.
 
 ### Key Features
-- 🧠 AI Model Integration: Uses a TensorFlow Lite version of AttnSleep for automated sleep-stage prediction from EEG-like data.
-- 📊 Data Visualization: Real-time pie and line charts display stage distributions (Awake, N1, N2, N3, REM).
-- 🧮 Sleep Quality Scoring: Calculates a weighted sleep score based on stage composition.
-- 🧍‍♀️ User Accounts: Secure local user registration and login with SQLite persistence.
-- 📅 Synthetic Data Generator: Generates realistic dummy sleep data for testing and analytics.
-- 📱 Responsive Flutter UI: Modern Material 3 design with navigation bar and multi-page layout (Home, Insights, Info, Account).
+- AI Model Integration: Uses a TensorFlow Lite version of AttnSleep for automated sleep-stage prediction from EEG-like data.
+- Data Visualization: Real-time pie and line charts display stage distributions (Awake, N1, N2, N3, REM).
+- Sleep Quality Scoring: Calculates a weighted sleep score based on stage composition.
+- User Accounts: Secure local user registration and login with SQLite persistence.
+- Synthetic Data Generator: Generates realistic dummy sleep data for testing and analytics.
+- Responsive Flutter UI: Modern Material 3 design with navigation bar and multi-page layout (Home, Insights, Info, Account).
 
 ### Tech Stack
 - Framework: Flutter
